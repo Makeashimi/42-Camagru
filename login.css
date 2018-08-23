@@ -1,3 +1,9 @@
+body {
+    background: url(background.jpg) no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+}
+
 .conteneur {
     height: 100%;
     display: flex;
@@ -11,30 +17,19 @@
     width:300px;
     height:300px;
     border-radius:50%;
-    background:pink;
+    background:#0a78a8;
 }
 
 .rond2 {
     margin-left: 10px;
 }
 
-.rond div {
+.text {
+    /* border: 2px solid red; */
     float:left;
     width:100%;
-    padding-top:50%;
+    margin-top:45%;
     line-height:1em;
-    margin-top:-0.5em;
-    font-size: 30px;
-    text-align:center;
-    color:white;
-}
-
-.rond2 div {
-    float:left;
-    width:100%;
-    padding-top:50%;
-    line-height:1em;
-    margin-top:-0.5em;
     font-size: 30px;
     text-align:center;
     color:white;
