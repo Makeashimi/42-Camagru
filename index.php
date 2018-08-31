@@ -12,7 +12,7 @@
     <input type="button" placeholder="Se connecter"> -->
     <!-- <img class = "concept" src = "background.jpg"> -->
         <div class="conteneur">
-            <div class="rond"><a class="text" href="connexion.php">Connecte toi !</a></div>
+            <div class="rond"><a class="text" href="connexion.php">Connecte toi !!</a></div>
             <div class="rond2"><a class="text" href="connexion.php">Pas encore inscrit(e) ?</a></div>
         </div>
     </body>
