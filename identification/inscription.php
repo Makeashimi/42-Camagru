@@ -11,7 +11,7 @@ if (!isset($_POST['user_request']) && !isset($_POST['email_request']) && !isset(
     <form action="./inscription.php" method="post">
         <input type="text" name="user_request" placeholder="Nom d'utilisateur" required><br/>
         <input type="text" name="email_request" placeholder="Adresse email" required><br/>
-        <input class="password" name="password_request" placeholder="Mot de passe" type="password" required><br/>
+        <input class="password" name="password_request" placeholder="Mot de passe" type="password" required ><br/>
         <input type="submit">
     </form>
     </body>
