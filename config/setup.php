@@ -41,6 +41,7 @@ try {
     NAME VARCHAR(100),
     PASSWORD VARCHAR(128),
     EMAIL VARCHAR (100),
+    HASH_MAIL VARCHAR (128),
     VALIDATE boolean)";
     $dbh->exec($request);
     echo "... New users table created ... <br/>";
@@ -52,10 +53,16 @@ try {
 try {
     $request = "CREATE TABLE pictures (FILE VARCHAR(100))";
     $dbh->exec($request);
-    echo "... New pictures table created <br/>";
+    echo "... New pictures table created <br/>Redirecting to index.php...";
+?>
+    <html>
+        <head>
+            <meta http-equiv="refresh" content="2; URL=http://localhost:8080/Camagru/git/index.php"/>
+        </head>
+    </html>
+<?php
 } catch (PDOException $error) {
     print "Error while creating pictures table !: " . $error->getMessage() . "<br/>";
     die();
 }
-
 ?>

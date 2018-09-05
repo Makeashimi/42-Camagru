@@ -1,4 +1,22 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="./registration.css">
+        <meta charset = "utf-8">
+    </head>
+    <body>
+        <h1>Sign up !</h1>
+        <form action="./registration.php" method="post">
+            <input type="text" name="name_request" placeholder="User name" required><br/>
+            <input type="email" name="email_request" placeholder="Email adress" required><br/>
+            <!-- securiser un peu le mdp genre min-length -->
+            <input class="password" name="password_request" placeholder="Password" type="password" required><br/>
+            <input type="submit" value="Register my account">
+        </form>
+    </body>
+</html>
+
 <?php
+session_start();
 require_once('../config/pdo.php');
 
 function check_existing_user($pdo, $name) {
@@ -7,29 +25,33 @@ function check_existing_user($pdo, $name) {
     if ($users) {
         foreach ($users as $user) {
             if ($user[0] == $name) {
-                return false;
+                return true;
             }
         }
     }
-    return true;
+    return false;
 }
 
 function check_existing_adress($pdo, $adress) {
+    if (filter_var($adress, FILTER_VALIDATE_EMAIL) == false) {
+        return true;
+    }
     $request = "SELECT email FROM `users`";
     $emails = $pdo->query($request);
     if ($emails) {
         foreach ($emails as $email) {
             if ($email[0] == $adress) {
-                return false;
+                return true;
             }
         }
     }
-    return true;
+    return false;
 }
 
 function add_user_database($pdo, $name, $password, $adress) {
     $password = hash('whirlpool', $password);
-    $request = "INSERT INTO `users` (NAME, PASSWORD, EMAIL, VALIDATE) VALUES ('$name', '$password', '$adress', 0)";
+    $hash_mail = hash('whirlpool', $adress);
+    $request = "INSERT INTO `users` (NAME, PASSWORD, EMAIL, HASH_MAIL, VALIDATE) VALUES ('$name', '$password', '$adress', '$hash_mail', 0)";
     $pdo->exec($request);
     //echo "User added";
 }
@@ -50,41 +72,14 @@ function send_mail($pdo, $name) {
     }
 }
 
-if (!isset($_POST['name_request']) && !isset($_POST['email_request']) && !isset($_POST['password_request'])) {
-?>
-    <html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="./registration.css">
-        <meta charset = "utf-8">
-    </head>
-    <body>
-    <h1>Sign up !</h1>
-    <form action="./registration.php" method="post">
-        <input type="text" name="name_request" placeholder="User name" required><br/>
-        <input type="text" name="email_request" placeholder="Email adress" required><br/>
-        <input class="password" name="password_request" placeholder="Password" type="password" required ><br/>
-        <input type="submit" value="Validate">
-    </form>
-    </body>
-    </html>
-<?php
-}
-else {
+if (isset($_POST['name_request']) && isset($_POST['email_request']) && isset($_POST['password_request'])) {
     //INJECTIONS SQL
-    if (check_existing_user($pdo, $_POST['name_request']) && check_existing_adress($pdo, $_POST['email_request'])) {
+    if (!check_existing_user($pdo, $_POST['name_request']) && !check_existing_adress($pdo, $_POST['email_request'])) {
         add_user_database($pdo, $_POST['name_request'], $_POST['password_request'], $_POST['email_request']);
         send_mail($pdo, $_POST['name_request']);
     }
     else {
-        echo "This name or the adress is/are already used, please change. You will be redirected to the registration page in 5 seconds.";
-        $_POST['name_request'] = $_POST['email_request'] = $_POST['password_request'] = null;
-        ?>
-        <html>
-        <head>
-            <meta http-equiv="refresh" content="5; URL=http://localhost:8080/Camagru/git/identification/registration.php"/>
-        </head>
-        </html>
-        <?php
+        echo "This name/adress is/are already used, or the adress is invalid format, please change.";
     }
 }
 ?>
