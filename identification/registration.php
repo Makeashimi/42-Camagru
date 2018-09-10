@@ -4,14 +4,23 @@
         <meta charset = "utf-8">
     </head>
     <body>
-        <h1>Sign up !</h1>
-        <form action="./registration.php" method="post">
-            <input type="text" name="name_request" placeholder="User name" required><br/>
-            <input type="email" name="email_request" placeholder="Email adress" required><br/>
-            <!-- securiser un peu le mdp genre min-length -->
-            <input class="password" name="password_request" placeholder="Password" type="password" required><br/>
-            <input type="submit" value="Register my account">
-        </form>
+        <div class="topbar">
+            <h1 class="title">Sign up !</h1>
+        </div>
+        <div class="container">
+            <div class="cadre">
+                <form class="rfi" action="./registration.php" method="post">
+                    User name *<br/>
+                    <input type="text" name="name_request" required><br/>
+                    Email adress *<br/>
+                    <input type="email" name="email_request" required><br/>
+                    <!-- securiser un peu le mdp genre min-length -->
+                    Password *<br/>
+                    <input name="password_request" type="password" required><br/>
+                    <input class="submit" type="submit" value="Register my account">
+                </form>
+             </div>
+        </div>
     </body>
 </html>
 

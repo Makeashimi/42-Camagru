@@ -57,10 +57,10 @@ try {
 ?>
     <html>
         <head>
-            <meta http-equiv="refresh" content="2; URL=http://localhost:8080/Camagru/git/index.php"/>
+            <meta http-equiv="refresh" content="2; URL='../index.php'"/>
         </head>
     </html>
-<?php
+<?php 
 } catch (PDOException $error) {
     print "Error while creating pictures table !: " . $error->getMessage() . "<br/>";
     die();

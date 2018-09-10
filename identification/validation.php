@@ -10,6 +10,6 @@ echo "NICE, your account is validated !! You will be redirected in 5 seconds to 
 ?>
 <html>
     <head>
-        <meta http-equiv="refresh" content="5; URL=http://localhost:8080/Camagru/git/index.php"/>
+        <meta http-equiv="refresh" content="5; URL='../index.php'"/>
     </head>
 </html>

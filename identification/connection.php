@@ -4,15 +4,23 @@
         <meta charset = "utf-8">
     </head>
     <body>
-        <h1>Sign in !</h1>
-        <form action="./connection.php" method="post">
-            <input type="text" name="name" placeholder="User name" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <input type="submit" value="Enter the site">
-        </form>
-        <form action="./connection.php" method="post">
-            <input type="submit" name="forgot" value="Forgot your password ?">
-        </form>
+        <div class="topbar">
+            <h1 class="title">Sign in !</h1>
+        </div>
+        <div class="container">
+            <div class="cadre">
+                <form class="rfi" action="./connection.php" method="post">
+                    User name *<br/>
+                    <input type="text" name="name" required><br/>
+                    Password *<br/>
+                    <input type="password" name="password" required><br/>
+                    <input class="submit" type="submit" value="Enter the site"><br/>
+                </form><br/>
+                <form class="rfi" action="./connection.php" method="post">
+                    <input type="submit" name="forgot" value="Forgot your password ?">
+                </form>
+            </div>
+        </div>
     </body>
 </html>
 
@@ -89,7 +97,7 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
     ?>
         <html>
             <head>
-                <meta http-equiv="refresh" content="0; URL=http://localhost:8080/Camagru/git/index.php"/>
+                <meta http-equiv="refresh" content="0; URL='../index.php'"/>
             </head>
         </html>
     <?php

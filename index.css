@@ -3,13 +3,6 @@
     -webkit-background-size: cover;
     -moz-background-size: cover;
 } */
-/* .conteneur {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-} */
 
 .topbar {
     position: fixed;
@@ -26,8 +19,10 @@
     position: absolute;
     color: white;
     left: 10%;
-    margin-top: 15px;
+    margin-top: 0px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 2em;
+    /* font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
 }
 
 .container {

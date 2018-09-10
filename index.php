@@ -11,7 +11,7 @@ session_start();
     </head>
     <body>
         <div class="topbar">
-            <h1 class="title"> Welcome to my Camagru !</h1>
+            <h1 class="title">Welcome to my Camagru !</h1>
                 <div class="container">
                     <button class="identification">Identification</button>
                     <div class="container-child">
