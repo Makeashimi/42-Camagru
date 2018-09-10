@@ -10,14 +10,34 @@
         <div class="container">
             <div class="cadre">
                 <form class="rfi" action="./connection.php" method="post">
-                    User name *<br/>
-                    <input type="text" name="name" required><br/>
-                    Password *<br/>
-                    <input type="password" name="password" required><br/>
-                    <input class="submit" type="submit" value="Enter the site"><br/>
+                    <span class="text">User name *</span><br/>
+                    <input class="input" type="text" name="name" required><br/>
+                    <span class="text">Password *</span><br/>
+                    <input class="input" type="password" name="password" required><br/>
+                    <input class="submit" type="submit" value="Connect my account"><br/>
+                    <?php
+                        if (isset($_GET['id']) && $_GET['id'] == 'incorrect')
+                            echo "<center class='wrong''>Connection failed, verify your name/password. Be sure you validated your account first.<center>";
+                    ?>
                 </form><br/>
-                <form class="rfi" action="./connection.php" method="post">
-                    <input type="submit" name="forgot" value="Forgot your password ?">
+                <form class="password_forgot" action="./connection.php" method="post">
+                    <input class="submit" type="submit" name="forgot" value="Forgot password ?">
+                    <?php
+                        if (isset($_GET['id']) && $_GET['id'] == 'forgot') {
+                            echo "<br/><form action='./connection.php' method='post'>
+                                    <span class='text'>Enter your email adress *</span><br/>
+                                    <input class='input' type='email' name='email' required>
+                                    <input class='submit' type='submit' value='Get my reset email'>
+                                </form>";
+                            if (isset($_GET['check']) && $_GET['check'] == 'error')
+                                echo "<center class='wrong' style='width: 45%'>Unfortunately, this account does not exist. Are you sure you have validated it ?
+                                Or perhaps you wrote your adress incorrectly</center>";
+                        }
+                        else if (isset($_GET['check']) && $_GET['check'] == 'mail')
+                            echo "<center class='good'>Please check your emails to reset your password, do not forget to check your unwanted messages (:<center>";
+                        else if (isset($_GET['check']) && $_GET['check'] == 'fail')
+                            echo "<center class='wrong''>Unfortunately, sending email did not work.. ):<center>";
+                    ?>
                 </form>
             </div>
         </div>
@@ -28,19 +48,6 @@
 session_start();
 require_once('../config/pdo.php');
 //INJECTIONS SQL
-
-function show_reset_password() {
-    ?>
-    <html>
-        <body>
-        <form action="./connection.php" method="post">
-            <input type="text" name="email" placeholder="Enter your email adress" required>
-            <input type="submit" value="Get my reset email">
-        </form>
-        </body>
-    </html>
-    <?php
-}
 
 function check_existing_user($pdo, $name, $password) {
     $request = "SELECT * FROM `users`";
@@ -68,16 +75,30 @@ function check_existing_adress($pdo, $adress) {
 
 function send_mail($pdo, $adress) {
     $request = "SELECT hash_mail FROM `users` WHERE email='$adress'";
+    //AJOUTER TIMESTAMP PROUT CHOUETTE ET COQUILECOTS POUR RESET LE PASSWORD
     $hash = $pdo->query($request);
     $hash = $hash->fetch()[0];
     $lien = "http://localhost:8080/Camagru/git/identification/reset_password.php?id=".$hash;
     $message = "Welcome back !\r\n\nIt seems like you forgot your password. If you need to change it, please click on the link below :\r\n".$lien." ! \r\nSee you soon :D";
     $subject = "Forgotten password for Camagru";
     $to = $adress;
-    if (mail($to, $subject, utf8_decode($message)))
-        echo "Please check your emails to reset your password, do not forget to check your unwanted messages (:";
+    if (mail($to, $subject, utf8_decode($message))) {
+    ?>
+    <html>
+        <head>
+            <meta http-equiv="refresh" content="0; URL='./connection.php?check=mail'"/>
+        </head>
+    </html>
+    <?php
+    }
     else {
-        echo "Unfortunately, sending email did not work.. ):";
+    ?>
+        <html>
+            <head>
+                <meta http-equiv="refresh" content="0; URL='./connection.php?check=fail'"/>
+            </head>
+        </html>
+    <?php
     }
 }
 
@@ -86,9 +107,13 @@ if (isset($_POST['email'])) {
         send_mail($pdo, $_POST['email']);
     }
     else {
-        show_reset_password();
-        echo "Unfortunately, this account does not exist. Are you sure you have validated it ?<br/>
-        Or perhaps you wrote your adress incorrectly.";
+    ?>
+        <html>
+            <head>
+                <meta http-equiv="refresh" content="0; URL='./connection.php?id=forgot&check=error'"/>
+            </head>
+        </html>
+    <?php
     }
 }
 
@@ -102,11 +127,24 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
         </html>
     <?php
     }
-    else
-        echo "Connection failed, verify your name/password. Be sure you validated your account first.";
+    else {
+    ?>
+        <html>
+            <head>
+                <meta http-equiv="refresh" content="0; URL='./connection.php?id=incorrect'"/>
+            </head>
+        </html>
+    <?php
+    }
 }
 
 if (isset($_POST['forgot'])) {
-    show_reset_password();
+    ?>
+        <html>
+            <head>
+                <meta http-equiv="refresh" content="0; URL='./connection.php?id=forgot"/>
+            </head>
+        </html>
+    <?php
 }
 ?>

@@ -1,3 +1,9 @@
+body {
+    background: url(registration.jpg) no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+}
+
 .topbar {
     position: fixed;
     top: 0;
@@ -12,11 +18,9 @@
 .title {
     color: white;
     /* left: 10%; */
-    margin-top: 0;
+    margin-top: 15px;
     text-align: center;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 2em;
-    /* font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .container {
@@ -28,20 +32,54 @@
 
 .cadre {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #3eb48994;
-    height: 50%;
+    height: 40%;
     width: 50%;
 }
 
-.rfi > input{
-    /* border: 2px solid red; */
-    height: 7%;
-    /* width: 140%; */
-    margin-bottom: 6%;
+.rfi {
+    width: 40%;
+}
+
+.password_forgot {
+    width: 45%;
+}
+
+.input {
+    width: 100%;
+    height: 5%;
+    margin-bottom: 5%;
+    border: 1px solid #acadaf;
+    border-radius: 10px;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to(#cccccc));
 }
 
 .submit {
-    width: 100%;
+    margin-left: 25%;
+    width: 50%;
+    height: 5%;
+    margin-bottom: 5%;
+    border: 1px solid #acadaf;
+    border-radius: 10px;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to(#cccccc));
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.wrong {
+    color: #bc0000;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.good {
+    color: #0f7705;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.text {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
 }

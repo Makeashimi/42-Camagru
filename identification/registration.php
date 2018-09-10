@@ -10,14 +10,22 @@
         <div class="container">
             <div class="cadre">
                 <form class="rfi" action="./registration.php" method="post">
-                    User name *<br/>
-                    <input type="text" name="name_request" required><br/>
-                    Email adress *<br/>
-                    <input type="email" name="email_request" required><br/>
+                    <span class="text">User name *</span><br/>
+                    <input class="input" type="text" name="name_request" required><br/>
+                    <span class="text">Email adress *</span><br/>
+                    <input class="input" type="email" name="email_request" required><br/>
                     <!-- securiser un peu le mdp genre min-length -->
-                    Password *<br/>
-                    <input name="password_request" type="password" required><br/>
-                    <input class="submit" type="submit" value="Register my account">
+                    <span class="text">Password *</span><br/>
+                    <input class="input" name="password_request" type="password" required><br/>
+                    <input class="submit" type="submit" value="Register my account"><br/>
+                    <?php
+                        if (isset($_GET['id']) && $_GET['id'] == 'account')
+                            echo "<br/><center class='wrong'>This name/adress is/are already used, please change.</center>";
+                        else if (isset($_GET['id']) && $_GET['id'] == 'mail')
+                            echo "<br/><center class='good'>Please check your emails to validate your adress, do not forget to check your unwanted messages (:</center>";
+                        else if (isset($_GET['id']) && $_GET['id'] == 'error')
+                            echo "<br/><center class='wrong'>Unfortunately, sending email did not work.. ):</center>";
+                    ?>
                 </form>
              </div>
         </div>
@@ -62,7 +70,6 @@ function add_user_database($pdo, $name, $password, $adress) {
     $hash_mail = hash('whirlpool', $adress);
     $request = "INSERT INTO `users` (NAME, PASSWORD, EMAIL, HASH_MAIL, VALIDATE) VALUES ('$name', '$password', '$adress', '$hash_mail', 0)";
     $pdo->exec($request);
-    //echo "User added";
 }
 
 function send_mail($pdo, $name) {
@@ -74,10 +81,21 @@ function send_mail($pdo, $name) {
     " !\r\n\nPlease click on the link below to validate your account and join the adventure :\r\n".$lien." ! \r\nSee you soon :D";
     $subject = "Registration for Camagru";
     $to = $_POST['email_request'];
-    if (mail($to, $subject, utf8_decode($message)))
-        echo "Please check your emails to validate your adress, do not forget to check your unwanted messages (:";
+    if (mail($to, $subject, utf8_decode($message))) {
+        ?>
+        <head>
+            <meta http-equiv="refresh" content="0; URL='./registration.php?id=mail'"/>
+        </head>
+        <?php
+        //echo "Please check your emails to validate your adress, do not forget to check your unwanted messages (:";
+    }
     else {
-        echo "Unfortunately, sending email did not work.. ):";
+        ?>
+        <head>
+            <meta http-equiv="refresh" content="0; URL='./registration.php?id=error'"/>
+        </head>
+        <?php
+        //echo "Unfortunately, sending email did not work.. ):";
     }
 }
 
@@ -88,7 +106,11 @@ if (isset($_POST['name_request']) && isset($_POST['email_request']) && isset($_P
         send_mail($pdo, $_POST['name_request']);
     }
     else {
-        echo "This name/adress is/are already used, or the adress is invalid format, please change.";
+        ?>
+        <head>
+            <meta http-equiv="refresh" content="0; URL='./registration.php?id=account'"/>
+        </head>
+        <?php
     }
 }
 ?>
