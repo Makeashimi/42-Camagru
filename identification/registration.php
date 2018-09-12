@@ -11,13 +11,13 @@
             <div class="cadre">
                 <form class="rfi" action="./registration.php" method="post">
                     <span class="text">User name *</span><br/>
-                    <input class="input" type="text" name="name_request" required><br/>
+                    <input class="input" type="text" name="name_request" maxlength="20" required><br/>
                     <span class="text">Email adress *</span><br/>
-                    <input class="input" type="email" name="email_request" required><br/>
+                    <input class="input" type="email" name="email_request" maxlength="50" required><br/>
                     <!-- securiser un peu le mdp genre min-length -->
                     <span class="text">Password *</span><br/>
                     <input class="input" name="password_request" type="password" required><br/>
-                    <input class="submit" type="submit" value="Register my account"><br/>
+                    <input class="submit" type="submit" value="Register"><br/>
                     <?php
                         if (isset($_GET['id']) && $_GET['id'] == 'account')
                             echo "<br/><center class='wrong'>This name/adress is/are already used, please change.</center>";
@@ -29,12 +29,15 @@
                 </form>
              </div>
         </div>
+        <div class="footer">
+            <div class="text_footer">© jcharloi 2018</div>
+        </div>
     </body>
 </html>
 
 <?php
-session_start();
 require_once('../config/pdo.php');
+session_start();
 
 function check_existing_user($pdo, $name) {
     $request = "SELECT name FROM `users`";
@@ -67,8 +70,7 @@ function check_existing_adress($pdo, $adress) {
 
 function add_user_database($pdo, $name, $password, $adress) {
     $password = hash('whirlpool', $password);
-    $hash_mail = hash('whirlpool', $adress);
-    $request = "INSERT INTO `users` (NAME, PASSWORD, EMAIL, HASH_MAIL, VALIDATE) VALUES ('$name', '$password', '$adress', '$hash_mail', 0)";
+    $request = "INSERT INTO `users` (NAME, PASSWORD, EMAIL, VALIDATE) VALUES ('$name', '$password', '$adress', 0)";
     $pdo->exec($request);
 }
 

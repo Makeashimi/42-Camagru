@@ -1,5 +1,6 @@
 <?php
 require_once('database.php');
+session_start();
 
 try {
     $dbh = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
@@ -38,9 +39,9 @@ try {
 try {
     $request = "CREATE TABLE users (
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    NAME VARCHAR(100),
+    NAME VARCHAR(20),
     PASSWORD VARCHAR(128),
-    EMAIL VARCHAR (100),
+    EMAIL VARCHAR (50),
     HASH_MAIL VARCHAR (128),
     VALIDATE boolean)";
     $dbh->exec($request);
@@ -53,6 +54,8 @@ try {
 try {
     $request = "CREATE TABLE pictures (FILE VARCHAR(100))";
     $dbh->exec($request);
+    if (isset($_SESSION['user']))
+        unset($_SESSION['user']);
     echo "... New pictures table created <br/>Redirecting to index.php...";
 ?>
     <html>

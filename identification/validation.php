@@ -1,6 +1,6 @@
 <?php
-session_start();
 require_once('../config/pdo.php');
+session_start();
 
 $id = $_GET['id'];
 $request = "UPDATE `users` SET validate='1' WHERE id=$id";

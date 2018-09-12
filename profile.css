@@ -1,28 +1,4 @@
-body {
-    background: url(registration.jpg) no-repeat center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-}
-
-.topbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: 0;
-    height: 5%;
-    width: 100%;
-    background-color: #3eb489;
-}
-
-.title {
-    color: white;
-    margin-top: 15px;
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.container {
+.container_cadre {
     height: 100%;
     display: flex;
     justify-content: center;
@@ -39,12 +15,7 @@ body {
 }
 
 .rfi {
-    width: 30%;
-}
-
-.text {
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    width: 40%;
 }
 
 .input {
@@ -67,7 +38,34 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.wrong {
+    color: #bc0000;
+    font-family: Arial, Helvetica, sans-serif;;
+}
+
 .good {
     color: #0f7705;
+    font-family: Arial, Helvetica, sans-serif;;
+}
+
+.text {
+    color: white;
     font-family: Arial, Helvetica, sans-serif;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3%;
+    background-color: #3eb489;
+    color: white;
+    text-align: center;
+}
+
+.text_footer {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: right;
+    margin: 10px 10% 0 0;
 }

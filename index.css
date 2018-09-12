@@ -1,5 +1,5 @@
 body {
-    background: url(identification/registration.jpg) no-repeat center fixed;
+    background: url(background.jpg) no-repeat center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
 }
@@ -26,7 +26,7 @@ body {
 .container {
     /* border: 2px solid red; */
     position: absolute;
-    right: 0;
+    right: 10%;
     height: 100%;
     /* display: inline-block; */
 }
@@ -53,14 +53,12 @@ body {
     display: block;
 }
 
-.identification {
+.button_top {
     background-color: #402e2b36;
     color: white;
     border: none;
     cursor: pointer;
-    padding:0 20px 0 20px;
     height: 100%;
-    margin-top:0;
     font-size: 25px;
     font-family: Arial, Helvetica, sans-serif;
     padding: 0 30px 0 30px;
@@ -68,4 +66,21 @@ body {
 
 .identification:hover {
     background-color: #402e2b3b;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3%;
+    background-color: #3eb489;
+    color: white;
+    text-align: center;
+}
+
+.text_footer {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: right;
+    margin: 10px 10% 0 0;
 }

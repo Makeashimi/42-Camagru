@@ -11,13 +11,13 @@
             <div class="cadre">
                 <form class="rfi" action="./connection.php" method="post">
                     <span class="text">User name *</span><br/>
-                    <input class="input" type="text" name="name" required><br/>
+                    <input class="input" type="text" name="name" maxlength="20" required><br/>
                     <span class="text">Password *</span><br/>
                     <input class="input" type="password" name="password" required><br/>
-                    <input class="submit" type="submit" value="Connect my account"><br/>
+                    <input class="submit" type="submit" value="Connect"><br/>
                     <?php
                         if (isset($_GET['id']) && $_GET['id'] == 'incorrect')
-                            echo "<center class='wrong''>Connection failed, verify your name/password. Be sure you validated your account first.<center>";
+                            echo "<center class='wrong''>Connection failed, verify your name/password. Be sure you validated your account first.</center>";
                     ?>
                 </form><br/>
                 <form class="password_forgot" action="./connection.php" method="post">
@@ -40,6 +40,9 @@
                     ?>
                 </form>
             </div>
+        </div>
+        <div class="footer">
+            <div class="text_footer">© jcharloi 2018</div>
         </div>
     </body>
 </html>
@@ -74,10 +77,10 @@ function check_existing_adress($pdo, $adress) {
 }
 
 function send_mail($pdo, $adress) {
-    $request = "SELECT hash_mail FROM `users` WHERE email='$adress'";
-    //AJOUTER TIMESTAMP PROUT CHOUETTE ET COQUILECOTS POUR RESET LE PASSWORD
-    $hash = $pdo->query($request);
-    $hash = $hash->fetch()[0];
+    $cpyadress = $adress.time();
+    $hash = hash('whirlpool', $cpyadress);
+    $request = "UPDATE `users` SET hash_mail='$hash' WHERE email='$adress'";
+    $pdo->exec($request);
     $lien = "http://localhost:8080/Camagru/git/identification/reset_password.php?id=".$hash;
     $message = "Welcome back !\r\n\nIt seems like you forgot your password. If you need to change it, please click on the link below :\r\n".$lien." ! \r\nSee you soon :D";
     $subject = "Forgotten password for Camagru";
@@ -119,6 +122,7 @@ if (isset($_POST['email'])) {
 
 if (isset($_POST['name']) && isset($_POST['password'])) {
     if (check_existing_user($pdo, $_POST['name'], $_POST['password'])) {
+        $_SESSION['user'] = $_POST['name'];
     ?>
         <html>
             <head>
