@@ -13,9 +13,9 @@ session_start();
             <h1 class="title">Welcome to my Camagru !</h1>
                 <div class="container">
                     <?php if (isset($_SESSION['user'])) {?>
-                        <a class="text" href="montage.php"><button class="button_top">Montage</button></a>
-                        <a class="text" href="profile.php"><button class="button_top"><?php echo $_SESSION['user'] ?></button></a>
-                        <a class="text" href="disconnect.php"><button class="button_top">Disconnect</button></a>
+                        <a class="text" href="montage/montage.php"><button class="button_top">Montage</button></a>
+                        <a class="text" href="edit_user/profile.php"><button class="button_top"><?php echo $_SESSION['user'] ?></button></a>
+                        <a class="text" href="identification/disconnect.php"><button class="button_top">Disconnect</button></a>
                     <?php }
                     else { ?>
                         <button class="button_top">Identification</button>

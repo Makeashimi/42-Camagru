@@ -52,7 +52,7 @@ try {
 }
 
 try {
-    $request = "CREATE TABLE pictures (FILE VARCHAR(100))";
+    $request = "CREATE TABLE pictures (LINK VARCHAR(100))";
     $dbh->exec($request);
     if (isset($_SESSION['user']))
         unset($_SESSION['user']);

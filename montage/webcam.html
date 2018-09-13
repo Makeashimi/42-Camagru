@@ -1,0 +1,39 @@
+<div class="container_video">
+    <div class="video">
+        <video id="camera-stream" width="500" autoplay></video>
+        <input type='button' id='snapshot' value="Say cheese !"/>
+        <canvas id='canvas' width='500' height='376'></canvas>
+        <script type="text/javascript">
+            window.onload = function() {
+                navigator.getUserMedia = (navigator.getUserMedia ||
+                            navigator.webkitGetUserMedia ||
+                            navigator.mozGetUserMedia || 
+                            navigator.msGetUserMedia);
+            }
+            if (navigator.getUserMedia) {
+                navigator.getUserMedia({video: true}, function(localMediaStream) {
+                    var vid = document.getElementById('camera-stream');
+                    // Create an object URL for the video stream and use this 
+                    // to set the video source.
+                    vid.src = window.URL.createObjectURL(localMediaStream);
+                },
+                function(err) {
+                        console.log('The following error occurred when trying to use getUserMedia: ' + err);
+                    }
+                );
+            } else {
+                alert('Sorry, your browser does not support getUserMedia..');
+            }
+            document.getElementById('snapshot').onclick = function() { 
+                var video = document.querySelector('video'); 
+                var canvas = document.getElementById('canvas'); 
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(video,0,0,500,376);
+
+                var image = new Image();
+                image.src = canvas.toDataURL("image/png");
+                // alert(image.toString());
+            }
+        </script>
+    </div>
+</div>
