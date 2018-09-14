@@ -1,4 +1,5 @@
 <?php
+//account deja valide
 require_once('../config/pdo.php');
 session_start();
 

@@ -24,16 +24,26 @@
             } else {
                 alert('Sorry, your browser does not support getUserMedia..');
             }
-            document.getElementById('snapshot').onclick = function() { 
+            document.getElementById('snapshot').onclick = function() {
                 var video = document.querySelector('video'); 
                 var canvas = document.getElementById('canvas'); 
                 var ctx = canvas.getContext('2d');
                 ctx.drawImage(video,0,0,500,376);
 
                 var image = new Image();
-                image.src = canvas.toDataURL("image/png");
-                // alert(image.toString());
+                image.src = canvas.toDataURL();
+                image = image.src;
+                // document.location.href = "./montage.php?id="+image;
             }
         </script>
     </div>
 </div>
+
+<?php
+    //echo "<script>alert(canvasToImage(document.getElementById('snapshot')));</script>";
+    //echo "toto";
+    /*<input type=hidden id=variableAPasser value=<?php eco $variableAPasser; ?>/>
+    //JavaScript
+    var variableRecuperee = document.getElementById(variableAPasser).value;*/
+?>
+

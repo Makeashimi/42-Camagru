@@ -19,10 +19,10 @@ if (isset($_SESSION['user'])) {
                 </div>
             </div>
         </body>
-        <?php require('webcam.html') ?>
-        <div class="footer">
+        <?php require('webcam.php') ?>
+        <!-- <div class="footer">
             <div class="text_footer">© jcharloi 2018</div>
-        </div>
+        </div> -->
     </html>
 <?php }
 else {
