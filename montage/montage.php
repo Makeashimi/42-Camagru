@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once("../config/pdo.php");
 
 if (isset($_SESSION['user'])) {
 ?>
@@ -24,7 +25,11 @@ if (isset($_SESSION['user'])) {
             <div class="text_footer">© jcharloi 2018</div>
         </div> -->
     </html>
-<?php }
+<?php
+
+
+
+}
 else {
     echo "You need to sign in to access this page. (;";
 }
