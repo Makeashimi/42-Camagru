@@ -8,6 +8,7 @@ if (isset($_SESSION['user'])) {
         <head>
             <link rel="stylesheet" type="text/css" href="../index.css">
             <link rel="stylesheet" type="text/css" href="./montage.css">
+            
             <meta charset = "utf-8">
         </head>
         <body>
@@ -19,11 +20,11 @@ if (isset($_SESSION['user'])) {
                      <a class="text" href="../identification/disconnect.php"><button class="button_top">Disconnect</button></a>
                 </div>
             </div>
+            <?php require('webcam.php') ?>
         </body>
-        <?php require('webcam.php') ?>
-        <!-- <div class="footer">
+        <div class="footer">
             <div class="text_footer">© jcharloi 2018</div>
-        </div> -->
+        </div>
     </html>
 <?php
 
