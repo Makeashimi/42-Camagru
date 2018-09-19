@@ -11,6 +11,7 @@
             <div class="cadre">
                 <form class="rfi" action="./registration.php" method="post">
                     <span class="text">User name *</span><br/>
+                    <!-- securiser un peu le user dans la  genre min-length -->
                     <input class="input" type="text" name="name_request" maxlength="20" required><br/>
                     <span class="text">Email adress *</span><br/>
                     <input class="input" type="email" name="email_request" maxlength="50" required><br/>

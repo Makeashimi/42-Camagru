@@ -27,10 +27,13 @@ document.getElementById('snapshot').onclick = function() {
 
     image = new Image();
     image.src = canvas.toDataURL();
-    document.getElementById('validate').style.display = "block";
+    cpy = image.src;
+    if (cpy.length > 6000)
+        document.getElementById('validate').style.display = "block";
 }
 
 document.getElementById('validate').onclick = function() {
+    // console.log('got here');
     var req = new XMLHttpRequest();
     req.open("POST", "montage.php");
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
