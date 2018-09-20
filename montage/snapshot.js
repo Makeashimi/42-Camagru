@@ -1,5 +1,31 @@
 var image;
+var choice;
 
+//Choose the filter
+document.getElementById('choice1').onclick = function() {
+    document.getElementById('snapshot').style.display = "block";
+    choice = 'Happy';
+}
+
+document.getElementById('choice2').onclick = function() {
+    document.getElementById('snapshot').style.display = "block";
+    choice = 'Normandie';
+}
+
+document.getElementById('choice3').onclick = function() {
+    document.getElementById('snapshot').style.display = "block";
+    choice = "Portal"; 
+}
+
+//Get file
+function onSelectedFile() {
+    var img = document.getElementById('file-stream');
+    img.src = URL.createObjectURL(event.target.files[0]);
+    document.getElementById('file-stream').style.display = "block";
+    document.getElementById('camera-stream').style.display = "none";
+}
+
+//Get webcam
 window.onload = function() {
     navigator.getUserMedia = (navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
@@ -9,7 +35,8 @@ window.onload = function() {
 if (navigator.getUserMedia) {
     navigator.getUserMedia({video: true}, function(localMediaStream) {
         var vid = document.getElementById('camera-stream');
-        vid.src = window.URL.createObjectURL(localMediaStream);
+        vid.srcObject = localMediaStream;
+        vid.play();
     },
     function(err) {
             console.log('The following error occurred when trying to use getUserMedia: ' + err);
@@ -19,7 +46,13 @@ if (navigator.getUserMedia) {
     alert('Sorry, your browser does not support getUserMedia..');
 }
 
+//Get the snapshot and send it to back
 document.getElementById('snapshot').onclick = function() {
+    var req = new XMLHttpRequest();
+    req.open("POST", "montage.php");
+    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    req.send("choice="+choice);
+
     var video = document.querySelector('video');
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
@@ -27,13 +60,11 @@ document.getElementById('snapshot').onclick = function() {
 
     image = new Image();
     image.src = canvas.toDataURL();
-    cpy = image.src;
-    if (cpy.length > 6000)
-        document.getElementById('validate').style.display = "block";
+    document.getElementById('validate').style.display = "block";
 }
 
+//Validate the finale image
 document.getElementById('validate').onclick = function() {
-    // console.log('got here');
     var req = new XMLHttpRequest();
     req.open("POST", "montage.php");
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");

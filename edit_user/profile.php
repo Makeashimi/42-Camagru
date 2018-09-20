@@ -55,9 +55,9 @@ if (isset($_SESSION['user'])) {
                     </form>
                 </div>
             </div>
-            <!-- <div class="footer">
+            <div class="footer">
                 <div class="text_footer">© jcharloi 2018</div>
-            </div>  -->
+            </div> 
         </body>
     </html>
 <?php

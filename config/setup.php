@@ -55,7 +55,8 @@ try {
     $request = "CREATE TABLE pictures (
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     USER_ID INT,
-    LINK BLOB(4294967295))";
+    LINK BLOB(4294967295),
+    CHOICE VARCHAR(255))";
     $dbh->exec($request);
     if (isset($_SESSION['user']))
         unset($_SESSION['user']);
