@@ -4,9 +4,7 @@
 <video id="camera-stream" width="500" autoplay></video>
 <img id="file-stream" src="" size="auto">
 <?php
-        $name = $_SESSION['user'];
-        $request = "SELECT id FROM `users` WHERE name='$name'";
-        $id = $pdo->query($request)->fetch()[0];
+        $id = $_SESSION['id_user'];
         $request = "SELECT COUNT(*) FROM `pictures` WHERE USER_ID='$id'";
         $nb_images = $pdo->query($request)->fetch()[0];
         if ($nb_images < 21) {

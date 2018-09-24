@@ -1,6 +1,6 @@
 <?php
-//GALERIE PHOTOS ET MENU DEROULANT
 session_start();
+require_once("config/pdo.php");
 ?>
 
 <html>
@@ -25,6 +25,39 @@ session_start();
                         </div>
                     <?php } ?>
                 </div>
+        </div>
+        <div class="container_pictures">
+            <?php
+                if (!isset($_GET['page']))
+                    $choice = 0;
+                else
+                    $choice = ($_GET['page']-1)*9;
+                $request = "SELECT link FROM `pictures` WHERE user_id ORDER BY id DESC LIMIT $choice, 9";
+                $images = $pdo->query($request);
+                foreach ($images as $image) {
+                    $officiel = str_replace(' ', '+', $image[0]);
+                    if ($officiel != NULL)
+                        echo "<img class='picture' src='$officiel'/>";
+                }
+            ?>
+        </div>
+        <div class="container_pagination">
+            <div class="pagination">
+            <!-- <a href="#">&laquo;</a> -->
+            <?php
+                $request = "SELECT COUNT(*) FROM `pictures` WHERE user_id";
+                $nb_images = $pdo->query($request)->fetch()[0];
+                $nb_pages = $nb_images/9;
+                $index = 1;
+                for ($nb_pages; $nb_pages > 0; $nb_pages--) {
+                    if (isset($_GET['page']) && $_GET['page'] == $index)
+                        echo "<a class='active' href='index.php?page=$index'>".$index++."</a>";
+                    else
+                        echo "<a href='index.php?page=$index'>".$index++."</a>";
+                }
+            ?>
+            <!-- <a href="#">&raquo;</a> -->
+            </div>
         </div>
         <div class="footer">
             <div class="text_footer">© jcharloi 2018</div>
