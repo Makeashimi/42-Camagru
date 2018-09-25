@@ -35,11 +35,14 @@ if (isset($_SESSION['user'])) {
     </html>
 <?php
 
-    if (isset($_POST['choice'])) {
-        $id = $_SESSION['user_id'];
+    if (isset($_POST['choice']) && isset($_POST['image'])) {
+        $id = $_SESSION['id_user'];
+        $image = $_POST['image'];
         $choice = $_POST['choice'];
-        $request = "INSERT INTO `pictures` (CHOICE) VALUES ('$choice')";
+        // Monter la photo ici, l'inserer dans la bdd
+        $request = "INSERT INTO `pictures` (USER_ID, CHOICE, LINK) VALUES ('$id', '$choice', '$image')";
         $pdo->exec($request);
+        echo "salut";
     }
 
 }

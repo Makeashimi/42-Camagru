@@ -46,28 +46,50 @@ if (navigator.getUserMedia) {
     alert('Sorry, your browser does not support getUserMedia..');
 }
 
+// function drawCanvas(req) {
+//     if (req.readyState == XMLHttpRequest.DONE && req.status == 200) {
+//         var video = document.querySelector('video');
+//         var canvas = document.getElementById('canvas');
+//         var ctx = canvas.getContext('2d');
+//         ctx.drawImage(video,0,0,500,376);
+
+//         image = new Image();
+//         image.src = canvas.toDataURL();
+//         document.getElementById('validate').style.display = "block";
+//     }
+// }
+
 //Get the snapshot and send it to back
 document.getElementById('snapshot').onclick = function() {
-    var req = new XMLHttpRequest();
-    req.open("POST", "montage.php");
-    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    req.send("choice="+choice);
-
     var video = document.querySelector('video');
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
     ctx.drawImage(video,0,0,500,376);
-
+    //document.getElementById('canvas').style.display = "block";
     image = new Image();
     image.src = canvas.toDataURL();
-    document.getElementById('validate').style.display = "block";
+    // document.getElementById('validate').style.display = "block";
+
+    var req = new XMLHttpRequest();
+    req.open("POST", "test.php");
+    req.onreadystatechange = function() {
+        if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
+            //AFFICHER LA BONNE IMAGE
+            var ret = req.responseText.split(',');
+            var img = document.getElementById('image');
+            img.src = ret[1].replace(' ', '+');
+            document.getElementById('image').style.display = "block";
+        }
+    };
+    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    req.send("choice="+choice+"&image="+image.src);
 }
 
 //Validate the finale image
-document.getElementById('validate').onclick = function() {
-    var req = new XMLHttpRequest();
-    req.open("POST", "montage.php");
-    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    req.send("index="+image.src);
-    document.location.href = 'montage.php';
-}
+// document.getElementById('validate').onclick = function() {
+//     var req = new XMLHttpRequest();
+//     req.open("POST", "montage.php");
+//     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+//     req.send("index="+image.src);
+//     document.location.href = 'montage.php';
+// }

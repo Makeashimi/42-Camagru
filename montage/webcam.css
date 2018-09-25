@@ -8,6 +8,7 @@
     max-width: 600px;
 }
 
+
 #snapshot {
     width: 25%;
     height: 2%;
@@ -19,6 +20,14 @@
     display: none;
 }
 
+#canvas {
+    display: none;
+}
+
+#image {
+    display: none;
+}
+
 .validate_button {
     width: 25%;
     border: 1px solid #acadaf;
@@ -26,5 +35,4 @@
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to(#cccccc));
     font-size: 1em;
     font-family: Arial, Helvetica, sans-serif;
-    display: none;
 }

@@ -15,18 +15,28 @@
         }
 ?>
 <canvas id='canvas' width='500' height='376'></canvas>
-<input class="validate_button" type='button' id='validate' value='Love this one !'/>
+<img id='image' src="" width='500' height='376'>
+<?php
+//recharger la page = perdre le bouton cheese
+// if (isset($_GET['image']) && $_GET['image'] == 'done') {
+//     $request = "SELECT link FROM `pictures` ORDER BY id DESC LIMIT 1";
+//     $image_truc = $pdo->query($request)->fetch()[0];
+//     $image = str_replace(' ', '+', $image_truc);
+//     echo "<img src = '$image'/>";
+//     echo "<input class='validate_button' type='button' id='validate' value='Love this one !'/>";
+// }
+?>
 <script type="text/javascript" src="snapshot.js"></script>
 
 <?php
-    if (isset($_POST['index'])) {
-        $text = $_POST['index'];
-        $user = $_SESSION['user'];
-        $request = "SELECT id FROM `users` WHERE name='$user'";
-        $id = $pdo->query($request)->fetch()[0];
-        $req = "INSERT INTO `pictures` (LINK, USER_ID) VALUES ('$text', $id)";
-        $pdo->exec($req);
-    }
+    // if (isset($_POST['index'])) {
+    //     $text = $_POST['index'];
+    //     $user = $_SESSION['user'];
+    //     $request = "SELECT id FROM `users` WHERE name='$user'";
+    //     $id = $pdo->query($request)->fetch()[0];
+    //     $req = "INSERT INTO `pictures` (LINK, USER_ID) VALUES ('$text', $id)";
+    //     $pdo->exec($req);
+    // }
 
     /*<input type=hidden id=variableAPasser value=<?php eco $variableAPasser; ?>/>
     //JavaScript
