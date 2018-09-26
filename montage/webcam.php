@@ -15,17 +15,9 @@
         }
 ?>
 <canvas id='canvas' width='500' height='376'></canvas>
-<img id='image' src="" width='500' height='376'>
-<?php
-//recharger la page = perdre le bouton cheese
-// if (isset($_GET['image']) && $_GET['image'] == 'done') {
-//     $request = "SELECT link FROM `pictures` ORDER BY id DESC LIMIT 1";
-//     $image_truc = $pdo->query($request)->fetch()[0];
-//     $image = str_replace(' ', '+', $image_truc);
-//     echo "<img src = '$image'/>";
-//     echo "<input class='validate_button' type='button' id='validate' value='Love this one !'/>";
-// }
-?>
+<img id='image' src='' width='500' height='376'>
+<img id='file_img' src='' size='auto'>
+<input class='validate_button' type='button' id='validate' value='Love this one !'/>
 <script type="text/javascript" src="snapshot.js"></script>
 
 <?php

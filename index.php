@@ -28,16 +28,25 @@ require_once("config/pdo.php");
         </div>
         <div class="container_pictures">
             <?php
-                if (!isset($_GET['page']))
-                    $choice = 0;
-                else
-                    $choice = ($_GET['page']-1)*9;
-                $request = "SELECT link FROM `pictures` WHERE user_id ORDER BY id DESC LIMIT $choice, 9";
-                $images = $pdo->query($request);
-                foreach ($images as $image) {
-                    $officiel = str_replace(' ', '+', $image[0]);
-                    if ($officiel != NULL)
-                        echo "<img class='picture' src='$officiel'/>";
+                if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                    if (!isset($_GET['page']))
+                        $choice = 0;
+                    else
+                        $choice = ($_GET['page']-1)*9;
+                    $request = "SELECT link FROM `pictures` WHERE validate='1' ORDER BY id DESC LIMIT $choice, 9";
+                    $images = $pdo->query($request);
+                    foreach ($images as $image) {
+                        $officiel = str_replace(' ', '+', $image[0]);
+                        if ($officiel != NULL)
+                            echo "<img class='picture' src='$officiel'/>";
+                    }
+                }
+                else {
+                    ?>
+                    <head>
+                        <meta http-equiv="refresh" content="0; URL='./index.php?page=1'"/>
+                    </head>
+                <?php
                 }
             ?>
         </div>

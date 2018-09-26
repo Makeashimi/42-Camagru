@@ -43,7 +43,7 @@ try {
     PASSWORD VARCHAR(128),
     EMAIL VARCHAR (50),
     HASH_MAIL VARCHAR (128),
-    VALIDATE boolean)";
+    VALIDATE BOOLEAN)";
     $dbh->exec($request);
     echo "... New users table created ... <br/>";
 } catch (PDOException $error) {
@@ -56,7 +56,8 @@ try {
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     USER_ID INT,
     LINK BLOB(4294967295),
-    CHOICE VARCHAR(255))";
+    CHOICE VARCHAR(255),
+    VALIDATE BOOLEAN)";
     $dbh->exec($request);
     if (isset($_SESSION['user']))
         unset($_SESSION['user']);
