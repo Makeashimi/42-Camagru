@@ -28,7 +28,7 @@ require_once("config/pdo.php");
         </div>
         <div class="container_pictures">
             <?php
-                if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                if (isset($_GET['page']) && (is_numeric($_GET['page']) && $_GET['page'] > 0)) {
                     if (!isset($_GET['page']))
                         $choice = 0;
                     else
@@ -37,7 +37,7 @@ require_once("config/pdo.php");
                     $images = $pdo->query($request);
                     foreach ($images as $image) {
                         $officiel = str_replace(' ', '+', $image[0]);
-                        if ($officiel != NULL)
+                        // if ($officiel != NULL)
                             echo "<img class='picture' src='$officiel'/>";
                     }
                 }

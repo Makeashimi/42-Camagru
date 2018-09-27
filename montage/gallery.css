@@ -1,5 +1,6 @@
 .officiel {
     margin: 7px 5px 5px 10px;
     width: 210px;
+    max-height: 155px;
     cursor: pointer;
 }
