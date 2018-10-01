@@ -1,19 +1,95 @@
 var choice = "";
 var file = false;
+var filter = null;
+pos_x = pos_y = 0;
+var selected = null,
+x_pos = 0, y_pos = 0,
+x_elem = 0, y_elem = 0;
+
+var video = document.getElementById('camera-stream');
+video.addEventListener('canplay', hidden_div);
+
+//Move the filter
+function start() {
+    selected = filter;
+    x_elem = x_pos - selected.offsetLeft;
+    y_elem = y_pos - selected.offsetTop;
+}
+
+function move(filter) {
+    x_pos = document.all ? window.event.clientX : filter.pageX;
+    y_pos = document.all ? window.event.clientY : filter.pageY;
+    if (selected !== null) {
+        selected.style.left = (x_pos - x_elem) + 'px';
+        selected.style.top = (y_pos - y_elem) + 'px';
+        pos_x = x_pos - x_elem;
+        pos_y = y_pos - y_elem;
+    }
+}
+
+function end() {
+    selected = null;
+}
+
+function hidden_div() {
+    camera = document.getElementById('camera');
+
+    camera.setAttribute('width', video.videoWidth);
+    camera.setAttribute('height', video.videoHeight);
+}
 
 //Choose the filter
 document.getElementById('choice1').onclick = function() {
     document.getElementById('snapshot').style.display = "block";
+    camera = document.getElementById('camera');
+    video = document.getElementById('camera-stream');
+    if (filter)
+        filter.src = 'images/cat.png';
+    else {
+        filter = document.createElement('img');
+        filter.setAttribute('id', 'filter_display');
+        filter.addEventListener('mousedown', start);
+        filter.addEventListener('mousemove', move);
+        filter.addEventListener('mouseup', end);
+        filter.src = 'images/cat.png';
+        camera.insertBefore(filter, video);
+    }
     choice = 'Happy';
 }
 
 document.getElementById('choice2').onclick = function() {
     document.getElementById('snapshot').style.display = "block";
-    choice = 'Normandie';
+    camera = document.getElementById('camera');
+    video = document.getElementById('camera-stream');
+    if (filter)
+        filter.src = 'images/angerfist.png';
+    else {
+        filter = document.createElement('img');
+        filter.setAttribute('id', 'filter_display');
+        filter.addEventListener('mousedown', start);
+        filter.addEventListener('mousemove', move);
+        filter.addEventListener('mouseup', end);
+        filter.src = 'images/angerfist.png';
+        camera.insertBefore(filter, video);
+    }
+    choice = 'Angerfist';
 }
 
 document.getElementById('choice3').onclick = function() {
     document.getElementById('snapshot').style.display = "block";
+    camera = document.getElementById('camera');
+    video = document.getElementById('camera-stream');
+    if (filter)
+        filter.src = 'images/portal.png';
+    else {
+        filter = document.createElement('img');
+        filter.setAttribute('id', 'filter_display');
+        filter.addEventListener('mousedown', start);
+        filter.addEventListener('mousemove', move);
+        filter.addEventListener('mouseup', end);
+        filter.src = 'images/portal.png';
+        camera.insertBefore(filter, video);
+    }
     choice = "Portal"; 
 }
 
@@ -23,14 +99,14 @@ function onSelectedFile() {
     file = event.target.files[0];
     // console.log(file);
     file_type = file.type;
-    if (file_type == 'image/png' || file_type == 'image/jpg' || file_type == 'image/jpeg') {
+    if (file_type == 'image/png') {
         img.src = URL.createObjectURL(file);
         document.getElementById('file-stream').style.display = "block";
         document.getElementById('camera-stream').style.display = "none";
         file = true;
     }
     else {
-        alert('Sorry, the extension of your file does not work, are accepted : .png, .jpg and .jpeg');
+        alert('Sorry, the extension of your file does not work, are accepted : .png');
         document.location.href = 'montage.php';
     }
 }
@@ -92,7 +168,7 @@ document.getElementById('snapshot').onclick = function() {
         }
     };
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    req.send("choice="+choice+"&image="+image.src);
+    req.send("choice="+choice+"&image="+image.src+"&x_pos="+pos_x+"&y_pos="+pos_y);
 }
 
 //Send the finale image

@@ -1,5 +1,21 @@
+#camera {
+    overflow: hidden;
+    position: relative;
+}
+
+#filter_display {
+    position: absolute;
+    cursor: pointer;
+    z-index: 2;
+}
+
+#filter_display:hover {
+    cursor: pointer;
+}
+
 #camera-stream {
     display: block;
+    z-index: 1;
 }
 
 #file {
@@ -14,6 +30,7 @@
     display: none;
     max-height: 376px;
     max-width: 500px;
+    z-index: 1;
 }
 
 #snapshot {

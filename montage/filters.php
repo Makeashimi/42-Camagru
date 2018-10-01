@@ -6,7 +6,7 @@
         <img class="filter" src="images/cat.png" id='choice1'>
     </div>
     <div class="button_filter">
-        <img class="filter" src="images/flag.jpg" id='choice2'>
+        <img class="filter" src="images/angerfist.png" id='choice2'>
     </div>
     <div class="button_filter">
         <img class="filter" src="images/portal.png" id='choice3'>

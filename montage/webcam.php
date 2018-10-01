@@ -1,7 +1,9 @@
 <link rel="stylesheet" type="text/css" href="./webcam.css">
 
-<input type="file" id='file' onchange="onSelectedFile()" accept="image/png, image/jpg, image/jpeg"/>
-<video id="camera-stream" width="500" height="376"></video>
+<input type="file" id='file' onchange="onSelectedFile()" accept="image/png"/>
+<div id="camera">
+    <video id="camera-stream" width="500" height="376"></video>
+</div>
 <img id="file-stream" src="" size="auto">
 <?php
         $id = $_SESSION['id_user'];
