@@ -33,7 +33,7 @@ require_once("config/pdo.php");
                         $choice = 0;
                     else
                         $choice = ($_GET['page']-1)*9;
-                    $request = "SELECT link FROM `pictures` WHERE validate='1' ORDER BY id DESC LIMIT $choice, 9";
+                    $request = "SELECT link FROM `pictures` ORDER BY id DESC LIMIT $choice, 9";
                     $images = $pdo->query($request);
                     foreach ($images as $image) {
                         $officiel = str_replace(' ', '+', $image[0]);

@@ -4,7 +4,6 @@
 <div id="camera">
     <video id="camera-stream" width="500" height="376"></video>
 </div>
-<img id="file-stream" src="" size="auto">
 <?php
         $id = $_SESSION['id_user'];
         $request = "SELECT COUNT(*) FROM `pictures` WHERE USER_ID='$id' AND VALIDATE='1'";
@@ -16,10 +15,11 @@
             echo "<input type='button' id='snapshot' value='Say cheese !' disabled/>Sorry, you can't take over 21 pictures ! Delete them to take more d:";
         }
 ?>
-<canvas id='canvas' width='500' height='376'></canvas>
+<canvas id='canvas'></canvas>
 <img id='image' src='' size="auto">
 <input class='validate_button' type='button' id='validate' value='Love this one !'/>
 <script type="text/javascript" src="snapshot.js"></script>
+<!-- <script type="text/javascript" src="choice.js"></script> -->
 
 <?php
 

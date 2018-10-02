@@ -11,4 +11,7 @@
     <div class="button_filter">
         <img class="filter" src="images/portal.png" id='choice3'>
     </div>
+    <div class="button_filter">
+        <img class="filter" src="images/gun.png" id='choice4'>
+    </div>
 </div>

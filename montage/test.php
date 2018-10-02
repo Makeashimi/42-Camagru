@@ -32,22 +32,30 @@ if (!empty($_POST['choice']) && !empty($_POST['image'])) {
         $src_w = 150;
         $src_h = 150;
     }
+    else if ($choice == 'Knife') {
+        $src = imagecreatefrompng('images/gun.png');
+        $dest_x = $_POST['x_pos'];
+        $dest_y = $_POST['y_pos'];
+        $src_w = 375;
+        $src_h = 80;
+    }
     imagecopy($dest, $src, $dest_x, $dest_y, 0, 0, $src_w, $src_h);
     imagepng($dest, 'images/image.png');
 
     $data = file_get_contents('images/image.png');
     $image = $link_explode[0].','.base64_encode($data);
-    $request = "INSERT INTO `pictures` (USER_ID, CHOICE, LINK, VALIDATE) VALUES ('$id', '$choice', '$image', 0)";
-    $pdo->exec($request);
+    //$request = "INSERT INTO `pictures` (USER_ID, CHOICE, LINK, VALIDATE) VALUES ('$id', '$choice', '$image', 0)";
+    //$pdo->exec($request);
     echo $image;
 }
 else
     echo "Fail";
 
-if (isset($_POST['validate'])) {
+if (!empty($_POST['validate']) && !empty($_POST['image']) && !empty($_POST['choice'])) {
     $id = $_SESSION['id_user'];
-    $request = "UPDATE `pictures` SET validate='1' WHERE user_id='$id' ORDER BY id DESC LIMIT 1";
+    $image = $_POST['image'];
+    $choice = $_POST['choice'];
+    $request = "INSERT INTO `pictures` (USER_ID, CHOICE, LINK, VALIDATE) VALUES ('$id', '$choice', '$image', 1)";
     $pdo->exec($request);
 }
-
 ?>

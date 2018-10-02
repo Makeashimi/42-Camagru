@@ -27,10 +27,8 @@
 }
 
 #file-stream {
-    display: none;
     max-height: 376px;
     max-width: 500px;
-    z-index: 1;
 }
 
 #snapshot {
