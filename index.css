@@ -2,6 +2,7 @@ body {
     background: url(background.jpg) no-repeat center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
+    position: relative;
 }
 
 .topbar {
@@ -131,4 +132,15 @@ body {
 
 .pagination a:hover:not(.active) {
     background-color: #ddd;
+}
+
+#transparant {
+    visibility: hidden;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
 }

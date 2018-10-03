@@ -1,0 +1,20 @@
+#hide {
+    visibility: hidden;
+}
+
+.popup {
+    position: absolute;
+    top:25%;
+    left:25%;
+    height:60%;
+    width: 35%;
+    background-color: #e8eaed;
+    border: 1px black solid;
+    z-index: 2;
+}
+
+/* .comment {
+    width: 300px;
+    height: 100px;
+    background-color: white;
+} */

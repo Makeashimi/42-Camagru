@@ -11,6 +11,9 @@ if (!empty($_POST['choice']) && !empty($_POST['image'])) {
     $decode = base64_decode($link_explode[1]);
     
     $dest = imagecreatefromstring($decode);
+    imagecolortransparent($dest, imagecolorallocatealpha($dest, 0, 0, 0, 127));
+    imagealphablending($dest, false);
+    imagesavealpha($dest, true);
     if ($choice == 'Happy') {
         $src = imagecreatefrompng('images/cat.png');
         $dest_x = $_POST['x_pos'];
@@ -44,8 +47,8 @@ if (!empty($_POST['choice']) && !empty($_POST['image'])) {
 
     $data = file_get_contents('images/image.png');
     $image = $link_explode[0].','.base64_encode($data);
-    //$request = "INSERT INTO `pictures` (USER_ID, CHOICE, LINK, VALIDATE) VALUES ('$id', '$choice', '$image', 0)";
-    //$pdo->exec($request);
+    // $request = "INSERT INTO `pictures` (USER_ID, CHOICE, LINK, VALIDATE) VALUES ('$id', '$choice', '$image', 0)";
+    // $pdo->exec($request);
     echo $image;
 }
 else
