@@ -1,18 +1,13 @@
 <link rel="stylesheet" type="text/css" href="./dialogbox.css">
 
-  <div id="hide">
-    <div class="popup">
-        <div class="comment">
-        </div> 
-        <?php
-          if (isset($_SESSION['user'])) {
-            //requete sql pour recuperer l'user_id de l'img.src
-            if ($_SESSION['user'] == 'Shimi') {
-                //si il est connecté et avec le bon id_user, supprimer
-              echo "<div class='remove' onClick='askedDelete()'>Delete the picture ?</div>";
-            }
-          }
-        ?>
+  <div id="hide" size="auto">
+    <div id="popup">
+        <img id='image_gallery' src='' size="auto">
+        <div onClick='askedLike()'>Like : </div>
+        <!-- div like here -->
+        <div id="comment"></div>
+        <!-- div remove create here-->
+        <div id="null"></div>
     </div>
   </div>
   <script type="text/javascript" src="dialog.js"></script>
@@ -24,5 +19,8 @@
     $id = $_POST['id'];
     $request = "DELETE FROM `pictures` WHERE id=$id";
     $pdo->exec($request);
+    $request = "DELETE FROM `loves` WHERE id=$id";
+    $pdo->exec($request);
   }
+
 ?>

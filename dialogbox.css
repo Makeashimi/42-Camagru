@@ -1,13 +1,17 @@
 #hide {
+    /* border: 2px solid red; */
+    position: absolute;
+    top: -80;
+    height: 100%;
+    width: 100%;
     visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.popup {
-    position: absolute;
-    top:25%;
-    left:25%;
-    height:60%;
-    width: 35%;
+#popup {
+    padding: 10px;
     background-color: #e8eaed;
     border: 1px black solid;
     z-index: 2;

@@ -8,7 +8,7 @@ if (isset($_GET['page']) && (is_numeric($_GET['page']) && $_GET['page'] > 0)) {
     $images = $pdo->query($request);
     foreach ($images as $image) {
         $officiel = str_replace(' ', '+', $image[0]);
-        echo "<img id='picture' alt='$image[1]' onclick='showdialog()' class='picture' src='$officiel'/>";
+        echo "<img id='picture' alt='$image[1]' class='picture' src='$officiel'/>";
     }
 }
 else {

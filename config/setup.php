@@ -52,12 +52,24 @@ try {
 }
 
 try {
+    $request = "CREATE TABLE loves (
+    ID INT,
+    NB INT,
+    NAME VARCHAR(20))";
+    $dbh->exec($request);
+    echo "... New loves table created ... <br/>";
+} catch (PDOException $error) {
+    print "Error while creating users table !: " . $error->getMessage() . "<br/>";
+    die();
+}
+
+try {
     $request = "CREATE TABLE pictures (
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     USER_ID INT,
     LINK BLOB(4294967295),
     CHOICE VARCHAR(255),
-    VALIDATE BOOLEAN)";
+    COMMENTS VARCHAR(255))";
     $dbh->exec($request);
     if (isset($_SESSION['user']))
         unset($_SESSION['user']);

@@ -6,7 +6,7 @@
 </div>
 <?php
         $id = $_SESSION['id_user'];
-        $request = "SELECT COUNT(*) FROM `pictures` WHERE USER_ID='$id' AND VALIDATE='1'";
+        $request = "SELECT COUNT(*) FROM `pictures` WHERE USER_ID='$id'";
         $nb_images = $pdo->query($request)->fetch()[0];
         if ($nb_images < 21) {
             echo "<input type='button' id='snapshot' value='Say cheese !'/>";
