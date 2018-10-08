@@ -2,36 +2,64 @@
 require_once("config/pdo.php");
 session_start();
 
-if (isset($_SESSION['user'])) {
-    if (!empty($_POST['picture_id'])) {
-        $id = $_POST['picture_id'];
-        //requete sql pour recuperer l'user_id selon l'id de l'image
-        $request = "SELECT name, nb FROM `loves` WHERE id='$id' ORDER BY id DESC LIMIT 1";
-        //$res = $pdo->query($request)->fetch();
-        //echo $res;
-        if ($_SESSION['user'] == 'Shimi')
-            echo $res[1];
-        else
-            echo $res[1]." Ko";
+if (!empty($_POST['picture_id'])) {
+    $picture_id = $_POST['picture_id'];
+    $ret = "Ko ";
+
+    if (isset($_SESSION['user'])) {
+        //requete pour savoir si je peux delete
+        $id_user = $_SESSION['id_user'];
+        $request = "SELECT user_id FROM `pictures` WHERE id=$picture_id";
+        $user_id = $pdo->query($request)->fetch()[0];
+        if ($user_id == $id_user)
+            $ret = "Ok ";
     }
-    
-    if (!empty($_POST['like']) && !empty($_POST['id'])) {
-        $picture_id = $_POST['id'];
-        $name = $_SESSION['user'];
-        $request = "SELECT nb FROM `loves` WHERE id='$picture_id' ORDER BY id DESC LIMIT 1";
-        $nb = $pdo->query($request)->fetch()[0];
-        $nb = $nb + 1;
-        $request = "INSERT INTO `loves` (id, nb, name) VALUES ($id, $nb, '$name')";
+    $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id";
+    $ret = $ret.$pdo->query($request)->fetch()[0];
+
+    $request = "SELECT text FROM `comments` WHERE id=$picture_id";
+    $array = json_encode($pdo->query($request)->fetchAll(PDO::FETCH_ASSOC));
+    echo $ret." ".$array;
+}
+
+if (!empty($_POST['like'])) {
+    if (!isset($_SESSION['user'])) {
+        echo "Fail";
+        return ;
+    }
+
+    $picture_id = $_POST['like'];
+    $user_id = $_SESSION['id_user'];
+
+    //recuperer le nombre de likes sur cette photo
+    $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id";
+    $nb_likes = $pdo->query($request)->fetch()[0];
+
+    //verifier que le type n'a pas deja liké
+    $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id AND user_id=$user_id";
+    $likes = $pdo->query($request)->fetch()[0];
+    if ($likes > 0) {
+        //delete le like
+        $request = "DELETE FROM `loves` WHERE id=$picture_id AND user_id=$user_id";
         $pdo->exec($request);
-        echo $nb;
+        $nb_likes = intval($nb_likes) - 1;
+        echo $nb_likes;
+        return ;
     }
+
+    //inserer le meme id et le user_name avec
+    $request = "INSERT INTO `loves` (id, user_id) VALUES ($picture_id, $user_id)";
+    $pdo->exec($request);
+    $nb_likes = intval($nb_likes) + 1;
+    echo $nb_likes;
 }
-else if (!isset($_SESSION['user']) && !empty($_POST['picture_id'])) {
-    $id = $_POST['picture_id'];
-    $request = "SELECT love FROM `pictures` WHERE id=$id";
-    $like = $pdo->query($request)->fetch()[0];
-    echo $like." Ko";
+
+if (!empty($_POST['id']) && !empty($_POST['comment'])) {
+    $picture_id = $_POST['id'];
+    $user_id = $_SESSION['id_user'];
+    $comment = $_POST['comment'];
+
+    $request = "INSERT INTO `comments` (id, text, user_id) VALUES ($picture_id, '$comment', $user_id)";
+    $pdo->exec($request);
 }
-else
-    echo "Fail";
 ?>

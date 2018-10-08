@@ -54,10 +54,21 @@ try {
 try {
     $request = "CREATE TABLE loves (
     ID INT,
-    NB INT,
-    NAME VARCHAR(20))";
+    USER_ID INT)";
     $dbh->exec($request);
     echo "... New loves table created ... <br/>";
+} catch (PDOException $error) {
+    print "Error while creating users table !: " . $error->getMessage() . "<br/>";
+    die();
+}
+
+try {
+    $request = "CREATE TABLE comments (
+    ID INT,
+    TEXT VARCHAR(255),
+    USER_ID INT)";
+    $dbh->exec($request);
+    echo "... New comments table created ... <br/>";
 } catch (PDOException $error) {
     print "Error while creating users table !: " . $error->getMessage() . "<br/>";
     die();
@@ -68,8 +79,7 @@ try {
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     USER_ID INT,
     LINK BLOB(4294967295),
-    CHOICE VARCHAR(255),
-    COMMENTS VARCHAR(255))";
+    CHOICE VARCHAR(255))";
     $dbh->exec($request);
     if (isset($_SESSION['user']))
         unset($_SESSION['user']);
