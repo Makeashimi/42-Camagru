@@ -64,9 +64,10 @@ try {
 
 try {
     $request = "CREATE TABLE comments (
-    ID INT,
+    ID_COMMENT INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    ID_PICTURE INT,
     TEXT VARCHAR(255),
-    USER_ID INT)";
+    ID_USER INT)";
     $dbh->exec($request);
     echo "... New comments table created ... <br/>";
 } catch (PDOException $error) {

@@ -32,11 +32,4 @@
     $pdo->exec($request);
   }
 
-  if (!empty($_POST['id']) && !empty($_POST['delete_comment'])) {
-    $text = $_POST['delete_comment'];
-    $id = $_POST['id'];
-    $request = "DELETE FROM `comments` WHERE text=$text AND id=$id";
-    $pdo->exec($request);
-  }
-
 ?>

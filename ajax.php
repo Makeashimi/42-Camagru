@@ -17,7 +17,7 @@ if (!empty($_POST['picture_id'])) {
     $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id";
     $ret = $ret.$pdo->query($request)->fetch()[0];
 
-    $request = "SELECT text FROM `comments` WHERE id=$picture_id";
+    $request = "SELECT text, id_comment FROM `comments` WHERE id_picture=$picture_id";
     $array = json_encode($pdo->query($request)->fetchAll(PDO::FETCH_ASSOC));
     echo $ret." ".$array;
 }
@@ -59,7 +59,22 @@ if (!empty($_POST['id']) && !empty($_POST['comment'])) {
     $user_id = $_SESSION['id_user'];
     $comment = $_POST['comment'];
 
-    $request = "INSERT INTO `comments` (id, text, user_id) VALUES ($picture_id, '$comment', $user_id)";
+    $request = "INSERT INTO `comments` (id_picture, text, id_user) VALUES ($picture_id, '$comment', $user_id)";
     $pdo->exec($request);
+    $request = "SELECT id_comment FROM `comments` WHERE id_user='$user_id' ORDER BY id_comment DESC LIMIT 1";
+    echo $pdo->query($request)->fetch()[0];
+}
+
+if (!empty($_POST['delete_comment'])) {
+    $text = $_POST['delete_comment'];
+    $request = "SELECT id_user FROM `comments` WHERE id_comment='$text'";
+    $id_user = $pdo->query($request)->fetch()[0];
+
+    if (empty($_SESSION['user']) || $id_user != $_SESSION['id_user'])
+      echo "Fail";
+    else {
+      $request = "DELETE FROM `comments` WHERE id_comment='$text'";
+      $pdo->exec($request);
+    }
 }
 ?>

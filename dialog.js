@@ -4,6 +4,7 @@ var src;
 var div_delete = false;
 var req = new XMLHttpRequest();
 var comment = document.getElementById('comment');
+var div_comment;
 var div_like;
 
 //if images
@@ -41,20 +42,20 @@ function display_like(str) {
 }
 
 function display_comment(str) {
-    if (div_commentaire) {
-        str.forEach(index => {
-            popup.removeChild(div_commentaire);
-            console.log(index.text);
-        });
+    // console.log(str);
+    if (div_comment) {
+        test = document.getElementsByClassName('delete_comment');
+        for (index=test.length - 1; index > -1; index--)
+            popup.removeChild(test[index]);
     }
     str.forEach(index => {
-        div_commentaire = document.createElement('div');
-        div_commentaire.setAttribute('class', 'delete_comment');
-        div_commentaire.setAttribute('alt', index.text);
-        div_commentaire.setAttribute('onClick', 'askedDeleteComment()');
+        div_comment = document.createElement('div');
+        div_comment.setAttribute('class', 'delete_comment');
+        div_comment.setAttribute('title', index.id_comment);
+        div_comment.addEventListener("click", askedDeleteComment);
         div_comment_text = document.createTextNode(index.text);
         div_comment.appendChild(div_comment_text);
-        popup.insertBefore(div_commentaire, comment);
+        popup.insertBefore(div_comment, comment);
     });
 }
 
@@ -65,7 +66,7 @@ function getData() {
             // console.log(req.responseText);
             ret = req.responseText;
             str = ret.split(' ');
-            // console.log(str);
+            console.log(str);
             str[2] = JSON.parse(str[2]);
             
             if (str[0] == "Ok") {
@@ -133,11 +134,11 @@ function askedComment() {
     req.open("POST", "ajax.php");
     req.onreadystatechange = function() {
         if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
-            // console.log(req.responseText);
+            console.log(req.responseText);
             div_comment = document.createElement('div');
             div_comment.setAttribute('class', 'delete_comment');
-            div_comment.setAttribute('alt', comment_text);
-            div_comment.setAttribute('onClick', 'askedDeleteComment()');
+            div_comment.setAttribute('title', req.responseText);
+            div_comment.addEventListener("click", askedDeleteComment);
             div_comment_text = document.createTextNode(comment_text);
             div_comment.appendChild(div_comment_text);
             popup.insertBefore(div_comment, comment);
@@ -159,22 +160,27 @@ function askedDelete() {
             }
         };
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        req.send("id="+id);
+        req.send( "id="+id);
     }
 }
 
-// function askedDeleteComment() {
-//     answer = confirm('Are you sure you want to remove your comment ?');
-//     // console.log(id);
+function askedDeleteComment(event) {
+    console.log(event.currentTarget.title);
+    comment_id = event.currentTarget.title;
+    answer = confirm('Are you sure you want to remove your comment ?');
 
-//     if (answer) {
-//         req.open("POST", "dialogbox.php");
-//         req.onreadystatechange = function() {
-//             if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
-//                 document.location.href = "index.php";
-//             }
-//         };
-//         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-//         // req.send("id="+id+"&delete_comment="+);
-//     }
-// }
+    if (answer) {
+        req.open("POST", "ajax.php");
+        req.onreadystatechange = function() {
+            if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
+                console.log(req.responseText);
+                if (req.responseText != 'Fail')
+                    document.location.href = "index.php";
+                else
+                    alert("Sorry, you are not the owner of this comment.");
+            }
+        };
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        req.send("delete_comment="+comment_id);
+    }
+}
