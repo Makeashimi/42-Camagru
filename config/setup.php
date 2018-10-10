@@ -66,7 +66,7 @@ try {
     $request = "CREATE TABLE comments (
     ID_COMMENT INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     ID_PICTURE INT,
-    TEXT VARCHAR(255),
+    TEXT VARCHAR(500),
     ID_USER INT)";
     $dbh->exec($request);
     echo "... New comments table created ... <br/>";

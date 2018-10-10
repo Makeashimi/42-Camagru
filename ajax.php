@@ -17,8 +17,10 @@ if (!empty($_POST['picture_id'])) {
     $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id";
     $ret = $ret.$pdo->query($request)->fetch()[0];
 
-    $request = "SELECT text, id_comment FROM `comments` WHERE id_picture=$picture_id";
+    $request = "SELECT comments.text, comments.id_comment, users.name FROM comments INNER JOIN users ON comments.id_user = users.id WHERE comments.id_picture='$picture_id'";
     $array = json_encode($pdo->query($request)->fetchAll(PDO::FETCH_ASSOC));
+
+    // $request = "SELECT name FROM `users` WHERE id='$array'";
     echo $ret." ".$array;
 }
 
@@ -61,8 +63,11 @@ if (!empty($_POST['id']) && !empty($_POST['comment'])) {
 
     $request = "INSERT INTO `comments` (id_picture, text, id_user) VALUES ($picture_id, '$comment', $user_id)";
     $pdo->exec($request);
-    $request = "SELECT id_comment FROM `comments` WHERE id_user='$user_id' ORDER BY id_comment DESC LIMIT 1";
-    echo $pdo->query($request)->fetch()[0];
+    $request = "SELECT id_comment, id_user FROM `comments` WHERE id_user='$user_id' ORDER BY id_comment DESC LIMIT 1";
+    $ret = $pdo->query($request)->fetch();
+    $request = "SELECT name FROM `users` WHERE id='$ret[1]'";
+    $name = $pdo->query($request)->fetch()[0];
+    echo $ret[0]." ".$name;
 }
 
 if (!empty($_POST['delete_comment'])) {
