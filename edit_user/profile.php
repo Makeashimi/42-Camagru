@@ -29,7 +29,7 @@ if (isset($_SESSION['user'])) {
             </div>
             <div class="container_cadre">
                 <div class="cadre">
-                    <form class="rfi" action="./profile.php" method="post">
+                    <form class="rfi" action="./next.php" method="post">
                         <span class="text">New user name</span><br/>
                         <input class="input" type="text" name="new_name" maxlength="20"><br/>
                         <span class="text">New email adress</span><br/>
@@ -39,8 +39,17 @@ if (isset($_SESSION['user'])) {
                         <input class="input" type="password" name="new_password"><br/>
                         <span class="text">Actual password*</span><br/>
                         <input class="input" type="password" name="last_password" required>
+                        <?php
+                            $name = $_SESSION['user'];
+                            $request = "SELECT notif FROM `users` WHERE name='$name'";
+                            $notif = $pdo->query($request)->fetch()[0];
+                            if ($notif == '0') {
+                                echo "<input type='checkbox' name='notif' unchecked>Desactive notification when a comment is received<br/>";
+                            } else if ($notif == '1') {
+                                echo "<input type='checkbox' name='notif' checked>Desactive notification when a comment is received<br/>";
+                            }
+                        ?>
                         <input class="submit" type="submit" value="Edit"><br/>
-
                         <?php
                             if (isset($_GET['id']) && $_GET['id'] == 'success')
                                 echo "<br/><center class='good'>Informations changed succesfully ! :3</center>";
@@ -62,69 +71,7 @@ if (isset($_SESSION['user'])) {
     </html>
 <?php
 
-    $value = "";
-    $new_name = "";
-
-    if (isset($_POST['new_name']) && $_POST['new_name'] != null) {
-        if (check_not_existing_user($pdo, 'name', $_POST['new_name'])) {
-            $new_name = $_POST['new_name'];
-            $value = $value."name='$new_name'";
-        }
-        else {
-            ?>
-                <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=fail'"/> </head> </html>
-            <?php
-        }
-    }
-
-    if (isset($_POST['new_email']) && $_POST['new_email'] != null) {
-        if (check_not_existing_user($pdo, 'email', $_POST['new_email'])) {
-            $new_email = $_POST['new_email'];
-            if (!empty($value))
-                $value = $value.", ";
-            $value = $value."email='$new_email'";
-        }
-        else {
-            ?>
-                <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=fail'"/> </head> </html>
-            <?php
-        }
-    }
-
-    if (isset($_POST['new_password']) && $_POST['new_password'] != null) {
-        $name = $_SESSION['user'];
-        $request = "SELECT * FROM `users` WHERE name='$name'";
-        $infos = $pdo->query($request);
-        if ($infos->fetch()[2] != hash('whirlpool', $_POST['new_password'])) {
-            $new_password = hash('whirlpool', $_POST['new_password']);
-            if (!empty($value))
-                $value = $value.", ";
-            $value = $value."password='$new_password'";
-        }
-        else {
-            ?>
-                <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=same'"/> </head> </html>
-            <?php
-        }
-    }
-
-    if ($value != "") {
-        $name = $_SESSION['user'];
-        $actual_password = hash('whirlpool', $_POST['last_password']);
-        $request = "UPDATE `users` SET $value WHERE name='$name' AND password='$actual_password'";
-        if ($pdo->exec($request) > 0) {
-            if ($new_name != "")
-                $_SESSION['user'] = $new_name;
-            ?>
-            <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=success'"/> </head> </html>
-            <?php
-        }
-        else {
-            ?>
-            <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=password'"/> </head> </html>
-            <?php
-        }
-    }
+    
 }
 else {
     echo "You need to sign in to access this page. (;";

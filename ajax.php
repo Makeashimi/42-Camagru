@@ -5,12 +5,17 @@ session_start();
 if (!empty($_POST['picture_id'])) {
     $picture_id = $_POST['picture_id'];
     $ret = "Ko ";
+    $request = "SELECT user_id, link FROM `pictures` WHERE id=$picture_id";
+    $pictures_infos = $pdo->query($request)->fetch();
+    $user_id = $pictures_infos[0];
+    $src = str_replace(' ', '+', $pictures_infos[1]);
+    $infos = null;
 
-    if (isset($_SESSION['user'])) {
-        //requete pour savoir si je peux delete
+    if (isset($_SESSION['id_user'])) {
         $id_user = $_SESSION['id_user'];
-        $request = "SELECT user_id FROM `pictures` WHERE id=$picture_id";
-        $user_id = $pdo->query($request)->fetch()[0];
+        //requete pour savoir si je peux delete
+        $request = "SELECT name, email FROM `users` WHERE id='$user_id'";
+        $infos = json_encode($pdo->query($request)->fetchAll(PDO::FETCH_ASSOC));
         if ($user_id == $id_user)
             $ret = "Ok ";
     }
@@ -19,9 +24,8 @@ if (!empty($_POST['picture_id'])) {
 
     $request = "SELECT comments.text, comments.id_comment, users.name FROM comments INNER JOIN users ON comments.id_user = users.id WHERE comments.id_picture='$picture_id'";
     $array = json_encode($pdo->query($request)->fetchAll(PDO::FETCH_ASSOC));
-
-    // $request = "SELECT name FROM `users` WHERE id='$array'";
-    echo $ret." ".$array;
+    
+    echo $ret." ".$array." ".$infos." ".$src;
 }
 
 if (!empty($_POST['like'])) {
@@ -56,7 +60,7 @@ if (!empty($_POST['like'])) {
     echo $nb_likes;
 }
 
-if (!empty($_POST['id']) && !empty($_POST['comment'])) {
+if (!empty($_POST['id']) && !empty($_POST['comment']) && !empty($_POST['email']) && !empty($_POST['name'])) {
     $picture_id = $_POST['id'];
     $user_id = $_SESSION['id_user'];
     $comment = $_POST['comment'];
@@ -65,8 +69,23 @@ if (!empty($_POST['id']) && !empty($_POST['comment'])) {
     $pdo->exec($request);
     $request = "SELECT id_comment, id_user FROM `comments` WHERE id_user='$user_id' ORDER BY id_comment DESC LIMIT 1";
     $ret = $pdo->query($request)->fetch();
-    $request = "SELECT name FROM `users` WHERE id='$ret[1]'";
-    $name = $pdo->query($request)->fetch()[0];
+    $request = "SELECT name, notif FROM `users` WHERE id='$ret[1]'";
+    $array = $pdo->query($request)->fetch();
+    $name = $array[0];
+
+    //send_mail here
+    if ($array[1] == '0') {
+        $lien = "http://localhost:8080/Camagru/git/index.php?page=1&id=".$picture_id;
+        $message = "Welcome back ".$_POST['name'].
+        " !\r\n\nIt appears you received a new comment in your picture, check the link below to see this :\r\n".$lien." ! \r\nSee you soon :D";
+        $subject = "New comment in your picture";
+        $to = $_POST['email'];
+        if (mail($to, $subject, utf8_decode($message)))
+            echo $ret[0]." ".$name;
+        else
+            echo "Fail";
+        return ;
+    }
     echo $ret[0]." ".$name;
 }
 

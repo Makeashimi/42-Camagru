@@ -7,7 +7,7 @@ function check_existing_adress($pdo, $hash) {
     $users = $pdo->query($request);
     if ($users) {
         foreach ($users as $user) {
-            if ($user[4] == $hash)
+            if ($user[5] == $hash)
                 return true;
         }
     }

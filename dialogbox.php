@@ -2,6 +2,7 @@
 
   <div id="hide" size="auto">
     <div id="popup">
+        <div id='user_name'></div>
         <img id='image_gallery' src='' size="auto"><br/>
         <div id="like" class="fas fa-thumbs-up" onClick='askedLike()'></div>
         <div id="comment_body">

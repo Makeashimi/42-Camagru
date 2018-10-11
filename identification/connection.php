@@ -57,7 +57,7 @@ function check_existing_user($pdo, $name, $password) {
     $users = $pdo->query($request);
     if ($users) {
         foreach ($users as $user) {
-            if ($user[1] == $name && $user[2] == hash('whirlpool', $password) && $user[5] == 1)
+            if ($user[1] == $name && $user[2] == hash('whirlpool', $password) && $user[6] == 1)
                 return true;
         }
     }
@@ -69,7 +69,7 @@ function check_existing_adress($pdo, $adress) {
     $users = $pdo->query($request);
     if ($users) {
         foreach ($users as $user) {
-            if ($user[3] == $adress && $user[5] == 1)
+            if ($user[3] == $adress && $user[6] == 1)
                 return true;
         }
     }
@@ -136,11 +136,6 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
     }
     else {
     ?>
-        <html>
-            <head>
-                <meta http-equiv="refresh" content="0; URL='./connection.php?id=incorrect'"/>
-            </head>
-        </html>
     <?php
     }
 }

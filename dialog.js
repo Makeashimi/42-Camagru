@@ -6,6 +6,17 @@ var req = new XMLHttpRequest();
 var comment = document.getElementById('comment');
 var div_comment;
 var div_like;
+var email;
+var name;
+var test = window.location.search;
+var degueux = test.search('id');
+
+if (degueux >= 0) {
+    test = test.substr(degueux);
+    test = test.substr(test.search("=") + 1);
+    id = test;
+    showdialog();
+}
 
 //if images
 pictures = document.getElementsByTagName('img');
@@ -40,8 +51,22 @@ function getData() {
         if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
             ret = req.responseText;
             str = ret.split(' ');
-            console.log(str);
+            // console.log(str);
+            if (str[4] == "") {
+                document.location.href = "index.php";
+                return ;
+            }
+            img = document.getElementById('image_gallery');
+            img.setAttribute('src', str[4]);
+
             str[2] = JSON.parse(str[2]);
+            if (str[3]) {
+                str[3] = JSON.parse(str[3]);
+            // console.log(str[3]);
+                name = str[3][0].name;
+                email = str[3][0].email;
+                document.getElementById('user_name').innerHTML = "Image by : "+name;
+            }
             if (str[0] == "Ok") {
                 display_delete();
             }
@@ -50,7 +75,6 @@ function getData() {
                 div_delete = false;
             }
             display_like(str[1]);
-            // console.log(str[2])
             display_comment(str[2]);
         }
     }
@@ -59,19 +83,14 @@ function getData() {
 }
 
 function showdialog(event) {
-    id = event.currentTarget.alt;
-    // console.log(id);
-    if (id) {
-        src = event.currentTarget.src;
+    if (event)
+        id = event.currentTarget.alt;
 
+    if (id) {
         hide = document.getElementById('hide').style.visibility = "visible";
         transparant = document.getElementById('transparant').style.visibility = "visible";
         popup = document.getElementById('popup');
         div_null = document.getElementById('null');
-
-        //console.log(src);
-        img = document.getElementById('image_gallery');
-        img.setAttribute('src', src);
         getData();
     }
 }
@@ -137,7 +156,7 @@ function askedComment() {
             if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
                 ret = req.responseText;
                 str = ret.split(' ');
-                // console.log(str, comment_text);
+                console.log(str);
 
                 div_comment = document.createElement('div');
                 div_comment.setAttribute('class', 'div_comment');
@@ -165,7 +184,7 @@ function askedComment() {
             }
         };
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        req.send("id="+id+"&comment="+comment_text);
+        req.send("id="+id+"&comment="+comment_text+"&name="+name+"&email="+email);
     }
 }
 

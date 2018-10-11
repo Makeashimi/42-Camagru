@@ -71,7 +71,7 @@ function check_existing_adress($pdo, $adress) {
 
 function add_user_database($pdo, $name, $password, $adress) {
     $password = hash('whirlpool', $password);
-    $request = "INSERT INTO `users` (NAME, PASSWORD, EMAIL, VALIDATE) VALUES ('$name', '$password', '$adress', 0)";
+    $request = "INSERT INTO `users` (NAME, PASSWORD, EMAIL, NOTIF, VALIDATE) VALUES ('$name', '$password', '$adress', 0, 0)";
     $pdo->exec($request);
 }
 

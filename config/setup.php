@@ -42,6 +42,7 @@ try {
     NAME VARCHAR(20),
     PASSWORD VARCHAR(128),
     EMAIL VARCHAR (50),
+    NOTIF INT,
     HASH_MAIL VARCHAR (128),
     VALIDATE BOOLEAN)";
     $dbh->exec($request);
