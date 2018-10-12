@@ -3,6 +3,10 @@ session_start();
 require_once("../config/pdo.php");
 
 if (!empty($_POST['choice']) && !empty($_POST['image'])) {
+    if (!isset($_SESSION['id_user'])) {
+        echo "Fail";
+        return ;
+    }
     $id = $_SESSION['id_user'];
     $choice = $_POST['choice'];
     $image = $_POST['image'];
@@ -47,14 +51,14 @@ if (!empty($_POST['choice']) && !empty($_POST['image'])) {
 
     $data = file_get_contents('images/image.png');
     $image = $link_explode[0].','.base64_encode($data);
-    // $request = "INSERT INTO `pictures` (USER_ID, CHOICE, LINK, VALIDATE) VALUES ('$id', '$choice', '$image', 0)";
-    // $pdo->exec($request);
     echo $image;
 }
-else
-    echo "Fail";
 
 if (!empty($_POST['validate']) && !empty($_POST['image']) && !empty($_POST['choice'])) {
+    if (!isset($_SESSION['id_user'])) {
+        echo "Fail";
+        return ;
+    }
     $id = $_SESSION['id_user'];
     $image = $_POST['image'];
     $choice = $_POST['choice'];

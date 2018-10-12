@@ -71,8 +71,9 @@ function check_existing_adress($pdo, $adress) {
 
 function add_user_database($pdo, $name, $password, $adress) {
     $password = hash('whirlpool', $password);
-    $request = "INSERT INTO `users` (NAME, PASSWORD, EMAIL, NOTIF, VALIDATE) VALUES ('$name', '$password', '$adress', 0, 0)";
-    $pdo->exec($request);
+    $request = $pdo->prepare("INSERT INTO `users` (NAME, PASSWORD, EMAIL, NOTIF, VALIDATE) VALUES (:name, :pass, :email, 0, 0)");
+    $params = array(':name' => $name, ':pass' => $password, ':$email' => $adress);
+    $request->execute($params);
 }
 
 function send_mail($pdo, $name) {
@@ -90,7 +91,6 @@ function send_mail($pdo, $name) {
             <meta http-equiv="refresh" content="0; URL='./registration.php?id=mail'"/>
         </head>
         <?php
-        //echo "Please check your emails to validate your adress, do not forget to check your unwanted messages (:";
     }
     else {
         ?>
@@ -98,7 +98,6 @@ function send_mail($pdo, $name) {
             <meta http-equiv="refresh" content="0; URL='./registration.php?id=error'"/>
         </head>
         <?php
-        //echo "Unfortunately, sending email did not work.. ):";
     }
 }
 

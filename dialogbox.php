@@ -22,14 +22,5 @@
 <?php
   require_once("config/pdo.php");
 
-  if (!empty($_POST['id'])) {
-    $id = $_POST['id'];
-    $request = "DELETE FROM `pictures` WHERE id=$id";
-    $pdo->exec($request);
-    $request = "DELETE FROM `comments` WHERE id_picture=$id";
-    $pdo->exec($request);
-    $request = "DELETE FROM `loves` WHERE id=$id";
-    $pdo->exec($request);
-  }
 
 ?>

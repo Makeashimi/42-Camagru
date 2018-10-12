@@ -50,7 +50,6 @@
 <?php
 session_start();
 require_once('../config/pdo.php');
-//INJECTIONS SQL
 
 function check_existing_user($pdo, $name, $password) {
     $request = "SELECT * FROM `users`";
@@ -124,8 +123,10 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
     if (check_existing_user($pdo, $_POST['name'], $_POST['password'])) {
         $_SESSION['user'] = $_POST['name'];
         $name = $_SESSION['user'];
-        $request = "SELECT id FROM `users` WHERE name='$name'";
-        $_SESSION['id_user'] = $pdo->query($request)->fetch()[0];
+        $request = $pdo->prepare("SELECT id FROM `users` WHERE name=':name'");
+        $params = array(':name' => $name);
+        $request->execute($params);
+        $_SESSION['id_user'] = $request->fetch()[0];
     ?>
         <html>
             <head>
@@ -136,6 +137,11 @@ if (isset($_POST['name']) && isset($_POST['password'])) {
     }
     else {
     ?>
+        <html>
+            <head>
+                <meta http-equiv="refresh" content="0; URL='./connection.php?id=incorrect'"/>
+            </head>
+        </html>
     <?php
     }
 }

@@ -19,7 +19,6 @@
 <img id='image' src='' size="auto">
 <input class='validate_button' type='button' id='validate' value='Love this one !'/>
 <script type="text/javascript" src="snapshot.js"></script>
-<!-- <script type="text/javascript" src="choice.js"></script> -->
 
 <?php
 

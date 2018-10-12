@@ -10,12 +10,21 @@ var email;
 var name;
 var test = window.location.search;
 var degueux = test.search('id');
+var degueux2 = test.search('page');
+var page;
 
 if (degueux >= 0) {
     test = test.substr(degueux);
     test = test.substr(test.search("=") + 1);
     id = test;
     showdialog();
+}
+
+if (degueux2 >= 0) {
+    test = test.substr(degueux2);
+    test = test.substr(test.search("=") + 1);
+    page = test;
+    console.log(page);
 }
 
 //if images
@@ -45,28 +54,28 @@ function display_like(str) {
     document.getElementById('like').innerHTML = " "+parseInt(str);
 }
 
+function display_image(src) {
+    if (src == "") {
+        document.location.href = "index.php";
+        return ;
+    }
+    img = document.getElementById('image_gallery');
+    img.setAttribute('src', src);
+}
+
 function getData() {
     req.open('POST', 'ajax.php');
     req.onreadystatechange = function() {
         if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
             ret = req.responseText;
             str = ret.split(' ');
-            // console.log(str);
-            if (str[4] == "") {
-                document.location.href = "index.php";
-                return ;
-            }
-            img = document.getElementById('image_gallery');
-            img.setAttribute('src', str[4]);
-
-            str[2] = JSON.parse(str[2]);
-            if (str[3]) {
-                str[3] = JSON.parse(str[3]);
-            // console.log(str[3]);
-                name = str[3][0].name;
-                email = str[3][0].email;
-                document.getElementById('user_name').innerHTML = "Image by : "+name;
-            }
+            console.log(str);
+            display_image(str[5]);
+            name = str[3];
+            email = str[4];
+            document.getElementById('user_name').innerHTML = "Image by : "+name;
+            display_like(str[1]);
+            display_comment(JSON.parse(str[2]));
             if (str[0] == "Ok") {
                 display_delete();
             }
@@ -74,8 +83,6 @@ function getData() {
                 popup.removeChild(div_delete);
                 div_delete = false;
             }
-            display_like(str[1]);
-            display_comment(str[2]);
         }
     }
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -137,7 +144,7 @@ function display_comment(str) {
         //
         p_comment = document.createElement('p');
         p_comment.setAttribute('class', 'p_comment');
-        p_comment_text = document.createTextNode(index.text);
+        p_comment_text = document.createTextNode(decodeURIComponent(escape(window.atob(index.text))));
         p_comment.appendChild(p_comment_text);
         
         //
@@ -149,7 +156,9 @@ function display_comment(str) {
 
 function askedComment() {
     var comment_text = document.getElementById('comment').value;
+    b64 = btoa(unescape(encodeURIComponent(comment_text)));
 
+    // console.log(comment_text, b64);
     if (comment_text != "") {
         req.open("POST", "ajax.php");
         req.onreadystatechange = function() {
@@ -157,34 +166,39 @@ function askedComment() {
                 ret = req.responseText;
                 str = ret.split(' ');
                 console.log(str);
-
-                div_comment = document.createElement('div');
-                div_comment.setAttribute('class', 'div_comment');
-                div_comment.setAttribute('title', str[0]);
-                div_comment.addEventListener("click", askedDeleteComment);
-                // div_comment.appendChild(div_comment_text);
-                //
-                p_name = document.createElement('p');
-                p_name.setAttribute('class', 'p_name');
-                //recuperer nom de l'utilisateur qui a commenté
-                p_name_text = document.createTextNode(str[1]+" :");
-                p_name.appendChild(p_name_text);
-            
-                //
-                p_comment = document.createElement('p');
-                p_comment.setAttribute('class', 'p_comment');
-                p_comment_text = document.createTextNode(comment_text);
-                p_comment.appendChild(p_comment_text);
+                if (str[0] != 'Fail') {
+                    div_comment = document.createElement('div');
+                    div_comment.setAttribute('class', 'div_comment');
+                    div_comment.setAttribute('title', str[0]);
+                    div_comment.addEventListener("click", askedDeleteComment);
+                    // div_comment.appendChild(div_comment_text);
+                    //
+                    p_name = document.createElement('p');
+                    p_name.setAttribute('class', 'p_name');
+                    //recuperer nom de l'utilisateur qui a commenté
+                    p_name_text = document.createTextNode(str[1]+" :");
+                    p_name.appendChild(p_name_text);
                 
-                //
-                div_comment.appendChild(p_name);
-                div_comment.appendChild(p_comment);
-                document.getElementById('comment_body').insertBefore(div_comment, document.getElementById('null42'));
-                document.getElementById('comment').value = '';
+                    //
+                    p_comment = document.createElement('p');
+                    p_comment.setAttribute('class', 'p_comment');
+                    p_comment_text = document.createTextNode(decodeURIComponent(escape(window.atob(b64))));
+                    p_comment.appendChild(p_comment_text);
+                    
+                    //
+                    div_comment.appendChild(p_name);
+                    div_comment.appendChild(p_comment);
+                    document.getElementById('comment_body').insertBefore(div_comment, document.getElementById('null42'));
+                    document.getElementById('comment').value = '';
+                }
+                else {
+                    alert('Sorry, you need to sign it to comment this picture ! (;')
+                    document.getElementById('comment').value = '';
+                }
             }
         };
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        req.send("id="+id+"&comment="+comment_text+"&name="+name+"&email="+email);
+        req.send("page="+page+"&id="+id+"&comment="+b64+"&name="+name+"&email="+email);
     }
 }
 
@@ -193,19 +207,22 @@ function askedDelete() {
     // console.log(id);
 
     if (answer) {
-        req.open("POST", "dialogbox.php");
+        req.open("POST", "ajax.php");
         req.onreadystatechange = function() {
             if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
-                document.location.href = "index.php";
+                if (req.responseText != 'Fail')
+                    document.location.href = "index.php";
+                else
+                    alert('Sorry, you need to sign it to delete this picture ! (;')
             }
         };
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        req.send("id="+id);
+        req.send("delete_picture="+id);
     }
 }
 
 function askedDeleteComment(event) {
-    console.log(event.currentTarget.title);
+    // console.log(event.currentTarget.title);'
     comment_id = event.currentTarget.title;
     answer = confirm('Are you sure you want to remove your comment ?');
 

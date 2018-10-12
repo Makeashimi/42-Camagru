@@ -204,11 +204,12 @@ document.getElementById('snapshot').onclick = function() {
             if (ret == 'Fail') {
                 alert('You need to choose your filter first !');
                 document.location.href = 'montage.php';
-            }
+            } else {
             img = document.getElementById('image');
             img.setAttribute('src', ret);
             document.getElementById('image').style.display = "block";
             document.getElementById('validate').style.display = "block";
+        }
         }
     };
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");

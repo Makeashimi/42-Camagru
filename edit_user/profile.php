@@ -2,14 +2,6 @@
 require_once('../config/pdo.php');
 session_start();
 
-function check_not_existing_user($pdo, $index, $value) {
-    $request = "SELECT COUNT(*) FROM `users` WHERE $index='$value'";
-    $users = $pdo->query($request)->fetch();
-    if ($users[0] > 0)
-        return false;
-    return true;
-}
-
 if (isset($_SESSION['user'])) {
 ?>
     <html>
@@ -40,13 +32,13 @@ if (isset($_SESSION['user'])) {
                         <span class="text">Actual password*</span><br/>
                         <input class="input" type="password" name="last_password" required>
                         <?php
-                            $name = $_SESSION['user'];
-                            $request = "SELECT notif FROM `users` WHERE name='$name'";
+                            $id = $_SESSION['id_user'];
+                            $request = "SELECT notif FROM `users` WHERE id='$id'";
                             $notif = $pdo->query($request)->fetch()[0];
                             if ($notif == '0') {
-                                echo "<input type='checkbox' name='notif' unchecked>Desactive notification when a comment is received<br/>";
+                                echo "<input type='checkbox' name='notif' class='desactivate' unchecked>Desactivate notification when a comment is received<br/>";
                             } else if ($notif == '1') {
-                                echo "<input type='checkbox' name='notif' checked>Desactive notification when a comment is received<br/>";
+                                echo "<input type='checkbox' name='notif' class='desactivate' checked>Desactivate notification when a comment is received<br/>";
                             }
                         ?>
                         <input class="submit" type="submit" value="Edit"><br/>
@@ -64,9 +56,9 @@ if (isset($_SESSION['user'])) {
                     </form>
                 </div>
             </div>
-            <div class="footer">
+            <!-- <div class="footer">
                 <div class="text_footer">© jcharloi 2018</div>
-            </div> 
+            </div>  -->
         </body>
     </html>
 <?php

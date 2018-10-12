@@ -50,10 +50,10 @@ if ((isset($_GET['id']) && check_existing_adress($pdo, $_GET['id'])) || isset($_
 <?php
     if (isset($_POST['password'])) {
         $id = $_SESSION['id'];
-        // $lpassword = hash('whirlpool', $_POST['last_password']); 
         $password = hash('whirlpool', $_POST['password']);
         $request = "UPDATE `users` SET password='$password', hash_mail='null' WHERE hash_mail='$id'";
-        unset($_SESSON['id']);
+        unset($_SESSION['id_user']);
+        unset($_SESSION['user']);
         $pdo->exec($request);
         ?>
             <html>
