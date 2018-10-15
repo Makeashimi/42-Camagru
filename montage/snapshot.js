@@ -154,23 +154,16 @@ function onSelectedFile() {
 
 //Get webcam
 window.onload = function() {
-    navigator.getUserMedia = (navigator.getUserMedia ||
-                navigator.webkitGetUserMedia ||
-                navigator.mozGetUserMedia ||
-                navigator.msGetUserMedia);
-}
-if (navigator.getUserMedia) {
-    navigator.getUserMedia({video: true}, function(localMediaStream) {
-        var vid = document.getElementById('camera-stream');
-        vid.srcObject = localMediaStream;
-        vid.play();
-    },
-    function(err) {
-            console.log('The following error occurred when trying to use getUserMedia: ' + err);
-        }
-    );
-} else {
-    alert('Sorry, your browser does not support getUserMedia..');
+    var constraints = { video: { width: 500, height: 376 } }; 
+    navigator.mediaDevices.getUserMedia(constraints)
+    .then(function(mediaStream) {
+        var video = document.querySelector('video');
+        video.srcObject = mediaStream;
+        video.onloadedmetadata = function(e) {
+            video.play();
+            };
+        })
+    .catch(function(err) { console.log(err.name + ": " + err.message); });
 }
 
 //Make the snapshot, send it to back and get the new image
@@ -179,10 +172,8 @@ document.getElementById('snapshot').onclick = function() {
 
     if (!file_boolean) {
         support = document.getElementById('camera-stream');
-        // console.log(support.width, support.height);
     } else {
         support = document.getElementById('file-stream');
-        // console.log(support.width, support.height);
     }
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
@@ -194,13 +185,14 @@ document.getElementById('snapshot').onclick = function() {
 
     var image = new Image();
     image.src = canvas.toDataURL();
-    // console.log(image.src);
+    // console.log(choice);
 
     var req = new XMLHttpRequest();
     req.open("POST", "test.php");
     req.onreadystatechange = function() {
         if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
             var ret = req.responseText;
+            // console.log(ret);
             if (ret == 'Fail') {
                 alert('You need to choose your filter first !');
                 document.location.href = 'montage.php';
@@ -228,6 +220,3 @@ document.getElementById('validate').onclick = function() {
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     req.send("validate="+"done"+"&image="+img.src+"&choice="+choice);
 }
-
-
-document.getElementById

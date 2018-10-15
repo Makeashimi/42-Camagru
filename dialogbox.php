@@ -9,7 +9,7 @@
           <div id="null42"></div>
         </div>
           <?php
-            if (isset($_SESSION['user'])) {
+            if (isset($_SESSION['id_user'])) {
               echo "<textarea id='comment' name='comments' maxlength='500' placeholder='Max 500 char'></textarea><br/>";
               echo "<input class='button_validate' type='button' onClick='askedComment()' value='Validate'>";
             }
@@ -20,7 +20,5 @@
   <script type="text/javascript" src="dialog.js"></script>
 
 <?php
-  require_once("config/pdo.php");
-
 
 ?>

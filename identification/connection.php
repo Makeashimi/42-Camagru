@@ -121,12 +121,12 @@ if (isset($_POST['email'])) {
 
 if (isset($_POST['name']) && isset($_POST['password'])) {
     if (check_existing_user($pdo, $_POST['name'], $_POST['password'])) {
-        $_SESSION['user'] = $_POST['name'];
-        $name = $_SESSION['user'];
-        $request = $pdo->prepare("SELECT id FROM `users` WHERE name=':name'");
+        $name = $_POST['name'];
+        $request = $pdo->prepare("SELECT id FROM `users` WHERE name=:name");
         $params = array(':name' => $name);
         $request->execute($params);
         $_SESSION['id_user'] = $request->fetch()[0];
+        $_SESSION['user'] = $name;
     ?>
         <html>
             <head>

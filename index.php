@@ -14,9 +14,9 @@ require_once("config/pdo.php");
         <div class="topbar">
             <h1 class="title">Welcome to my Camagru !</h1>
                 <div class="container">
-                    <?php if (isset($_SESSION['user'])) {?>
+                    <?php if (isset($_SESSION['id_user'])) {?>
                         <a class="text" href="montage/montage.php"><button class="button_top">Montage</button></a>
-                        <a class="text" href="edit_user/profile.php"><button class="button_top"><?php echo $_SESSION['user'] ?></button></a>
+                        <a class="text" href="edit_user/profile.php"><button class="button_top"><?php echo htmlspecialchars($_SESSION['user']) ?></button></a>
                         <a class="text" href="identification/disconnect.php"><button class="button_top">Disconnect</button></a>
                     <?php }
                     else { ?>

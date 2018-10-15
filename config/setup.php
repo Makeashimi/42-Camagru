@@ -67,7 +67,7 @@ try {
     $request = "CREATE TABLE comments (
     ID_COMMENT INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     ID_PICTURE INT,
-    TEXT VARCHAR(500),
+    TEXT LONGTEXT,
     ID_USER INT)";
     $dbh->exec($request);
     echo "... New comments table created ... <br/>";
@@ -83,8 +83,12 @@ try {
     LINK BLOB(4294967295),
     CHOICE VARCHAR(255))";
     $dbh->exec($request);
-    if (isset($_SESSION['user']))
+    if (isset($_SESSION['user'])) {
         unset($_SESSION['user']);
+    }
+    if (isset($_SESSION['id_user'])) {
+        unset($_SESSION['id_user']);
+    }
     echo "... New pictures table created <br/>Redirecting to index.php...";
 ?>
     <html>

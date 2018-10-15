@@ -48,7 +48,7 @@ if (isset($_SESSION['user'])) {
                             if (isset($_GET['id']) && $_GET['id'] == 'password')
                                 echo "<br/><center class='wrong'>Wrong password.</center>";
                             if (isset($_GET['id']) && $_GET['id'] == 'fail')
-                                echo "<br/><center class='wrong'>These informations are already taken.</center>";
+                                echo "<br/><center class='wrong'>These informations are already taken or invalid input.</center>";
                                 if (isset($_GET['id']) && $_GET['id'] == 'same')
                                 echo "<br/><center class='wrong'>You can't change your password by the same.</center>";
                         ?>
@@ -56,9 +56,9 @@ if (isset($_SESSION['user'])) {
                     </form>
                 </div>
             </div>
-            <!-- <div class="footer">
+            <div class="footer">
                 <div class="text_footer">© jcharloi 2018</div>
-            </div>  -->
+            </div> 
         </body>
     </html>
 <?php

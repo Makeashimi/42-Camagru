@@ -15,7 +15,7 @@ if (isset($_SESSION['user'])) {
                 <h1 class="title">Time to take a picture</h1>
                 <div class="container">
                     <a class="text" href="../index.php"><button class="button_top">Gallery</button></a>
-                    <a class="text" href="../edit_user/profile.php"><button class="button_top"><?php echo $_SESSION['user'] ?></button></a>
+                    <a class="text" href="../edit_user/profile.php"><button class="button_top"><?php echo htmlspecialchars($_SESSION['user']) ?></button></a>
                      <a class="text" href="../identification/disconnect.php"><button class="button_top">Disconnect</button></a>
                 </div>
             </div>

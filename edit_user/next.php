@@ -3,7 +3,7 @@ require_once('../config/pdo.php');
 session_start();
 
 function check_not_existing_user($pdo, $index, $value) {
-    $request = $pdo->prepare("SELECT COUNT(*) FROM `users` WHERE $index=':value'");
+    $request = $pdo->prepare("SELECT COUNT(*) FROM `users` WHERE $index=:value");
     $params = array(':value' => $value);
     $request->execute($params);
     $users = $request->fetch();
@@ -17,7 +17,7 @@ if (isset($_SESSION['user'])) {
     $new_name = "";
 
     if (isset($_POST['new_name']) && $_POST['new_name'] != null) {
-        if (check_not_existing_user($pdo, 'name', $_POST['new_name'])) {
+        if (strlen($_POST['new_name']) < 21 && check_not_existing_user($pdo, 'name', $_POST['new_name'])) {
             $new_name = $_POST['new_name'];
             $value = $value."name=:name";
         }
@@ -25,11 +25,12 @@ if (isset($_SESSION['user'])) {
             ?>
                 <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=fail'"/> </head> </html>
             <?php
+            return;
         }
     }
 
     if (isset($_POST['new_email']) && $_POST['new_email'] != null) {
-        if (check_not_existing_user($pdo, 'email', $_POST['new_email'])) {
+        if (strlen($_POST['new_email']) < 51 && check_not_existing_user($pdo, 'email', $_POST['new_email'])) {
             $new_email = $_POST['new_email'];
             if (!empty($value))
                 $value = $value.", ";
@@ -39,6 +40,7 @@ if (isset($_SESSION['user'])) {
             ?>
                 <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=fail'"/> </head> </html>
             <?php
+            return;
         }
     }
 
@@ -56,6 +58,7 @@ if (isset($_SESSION['user'])) {
             ?>
                 <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=same'"/> </head> </html>
             <?php
+            return;
         }
     }
 
@@ -65,15 +68,13 @@ if (isset($_SESSION['user'])) {
         $actual_password = hash('whirlpool', $_POST['last_password']);
         $request = "SELECT password FROM `users` WHERE id='$id'";
         $user_password = $pdo->query($request)->fetch()[0];
-        // echo "$user_password, $actual_password";
         if ($user_password != $actual_password) {
         ?>
             <html> <head> <meta http-equiv='refresh' content="0; URL='./profile.php?id=password'"/> </head> </html>
         <?php
-            return ;
+            return;
         }
         $request = $pdo->prepare("UPDATE `users` SET $value WHERE id='$id' AND password='$actual_password'");
-        // echo "UPDATE `users` SET $value WHERE name='$name' AND password='$actual_password'";
         if (!empty($_POST['new_name'])) {
             $_SESSION['user'] = $_POST['new_name'];
             $request->bindParam(':name', $new_name);
@@ -86,7 +87,8 @@ if (isset($_SESSION['user'])) {
         $request->execute();
         ?>
             <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=success'"/> </head> </html>
-        <?php 
+        <?php
+        return;
     }
 
     if (isset($_POST['notif'])) {
@@ -95,7 +97,8 @@ if (isset($_SESSION['user'])) {
         $pdo->exec($request);
         ?>
             <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=success'"/> </head> </html>
-        <?php 
+        <?php
+        return;
     }
     else {
         $id = $_SESSION['id_user'];
@@ -104,11 +107,13 @@ if (isset($_SESSION['user'])) {
         ?>
             <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=success'"/> </head> </html>
         <?php
+        return;
     }
 }
 else {
     ?>
         <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php'"/> </head> </html>
     <?php
+    return;
 }
 ?>

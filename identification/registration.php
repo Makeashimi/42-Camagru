@@ -72,14 +72,17 @@ function check_existing_adress($pdo, $adress) {
 function add_user_database($pdo, $name, $password, $adress) {
     $password = hash('whirlpool', $password);
     $request = $pdo->prepare("INSERT INTO `users` (NAME, PASSWORD, EMAIL, NOTIF, VALIDATE) VALUES (:name, :pass, :email, 0, 0)");
-    $params = array(':name' => $name, ':pass' => $password, ':$email' => $adress);
+    $params = array(':name' => $name, ':pass' => $password, ':email' => $adress);
+    var_dump($request);
     $request->execute($params);
 }
 
 function send_mail($pdo, $name) {
-    $request = "SELECT id FROM `users` WHERE name='$name'";
-    $id = $pdo->query($request);
-    $id = $id->fetch()[0];
+    $request = $pdo->prepare("SELECT id FROM `users` WHERE name=:name");
+    $params = array(':name' => $name);
+    $request->execute($params);
+    // $id = $pdo->query($request);
+    $id = $request->fetch()[0];
     $lien = "http://localhost:8080/Camagru/git/identification/validation.php?id=".$id;
     $message = "Welcome ".$_POST['name_request'].
     " !\r\n\nPlease click on the link below to validate your account and join the adventure :\r\n".$lien." ! \r\nSee you soon :D";

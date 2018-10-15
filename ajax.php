@@ -4,7 +4,7 @@ session_start();
 
 if (!empty($_POST['picture_id'])) {
     $picture_id = $_POST['picture_id'];
-    $ret = "Ko ";
+    $ret = "Ko";
     $request = "SELECT pictures.user_id, pictures.link, users.name FROM pictures INNER JOIN users ON pictures.user_id = users.id WHERE pictures.id='$picture_id'";
     $pictures_infos = $pdo->query($request)->fetch();
     $user_id = $pictures_infos[0];
@@ -21,12 +21,23 @@ if (!empty($_POST['picture_id'])) {
             $ret = "Ok ";
     }
     $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id";
-    $ret = $ret.$pdo->query($request)->fetch()[0];
+    $like = $pdo->query($request)->fetch()[0];
 
     $request = "SELECT comments.text, comments.id_comment, users.name FROM comments INNER JOIN users ON comments.id_user = users.id WHERE comments.id_picture='$picture_id'";
-    $array = json_encode($pdo->query($request)->fetchAll(PDO::FETCH_ASSOC));
-    
-    echo $ret." ".$array." ".$name." ".$email." ".$src;
+    $array = $pdo->query($request)->fetchAll(PDO::FETCH_ASSOC);
+    for ($i = 0; $i < count($array); $i++) {
+        $array[$i]["text"] = str_replace(' ', '+', $array[$i]['text']);
+    }
+    //$array = json_encode($array);
+    $tablo = array();
+    $tablo["ret"] = $ret;
+    $tablo["like"] = $like;
+    $tablo["array"] = $array;
+    $tablo["name"] = $name;
+    $tablo["email"] = $email;
+    $tablo["src"] = $src;
+    echo json_encode($tablo);
+    //echo $ret." ".$array." ".$name." ".$email." ".$src;
 }
 
 if (!empty($_POST['like'])) {
@@ -85,13 +96,18 @@ if (!empty($_POST['id']) && !empty($_POST['comment']) && !empty($_POST['email'])
         " !\r\n\nIt appears you received a new comment in your picture, check the link below to see this :\r\n".$lien." ! \r\nSee you soon :D";
         $subject = "New comment in your picture";
         $to = $_POST['email'];
-        if (mail($to, $subject, utf8_decode($message)))
-            echo $ret[0]." ".$name;
+        if (mail($to, $subject, utf8_decode($message))) {
+            $tablo['id_comment'] = $ret[0];
+            $tablo['name'] = $name;
+            echo json_encode($tablo);
+        }
         else
-            echo "Fail";
+            echo json_encode("Fail");
         return ;
     }
-    echo $ret[0]." ".$name;
+    $tablo['id_comment'] = $ret[0];
+    $tablo['name'] = $name;
+    echo json_encode($tablo);
 }
 
 if (!empty($_POST['delete_comment'])) {

@@ -13,6 +13,10 @@ var degueux = test.search('id');
 var degueux2 = test.search('page');
 var page;
 
+escapeHTML = function(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+};
+
 if (degueux >= 0) {
     test = test.substr(degueux);
     test = test.substr(test.search("=") + 1);
@@ -67,16 +71,14 @@ function getData() {
     req.open('POST', 'ajax.php');
     req.onreadystatechange = function() {
         if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
-            ret = req.responseText;
-            str = ret.split(' ');
-            console.log(str);
-            display_image(str[5]);
-            name = str[3];
-            email = str[4];
-            document.getElementById('user_name').innerHTML = "Image by : "+name;
-            display_like(str[1]);
-            display_comment(JSON.parse(str[2]));
-            if (str[0] == "Ok") {
+            ret = JSON.parse(req.responseText);
+            display_image(ret.src);
+            name = ret.name;
+            email = ret.email;
+            document.getElementById('user_name').innerHTML = "Image by : "+escapeHTML(ret.name);
+            display_like(ret.like);
+            display_comment(ret.array);
+            if (ret.ret == "Ok") {
                 display_delete();
             }
             else if (div_delete) {
@@ -137,14 +139,13 @@ function display_comment(str) {
         //
         p_name = document.createElement('p');
         p_name.setAttribute('class', 'p_name');
-        //recuperer nom de l'utilisateur qui a commenté
         p_name_text = document.createTextNode(index.name+" :");
         p_name.appendChild(p_name_text);
        
         //
         p_comment = document.createElement('p');
         p_comment.setAttribute('class', 'p_comment');
-        p_comment_text = document.createTextNode(decodeURIComponent(escape(window.atob(index.text))));
+        p_comment_text = document.createTextNode(atob(index.text));
         p_comment.appendChild(p_comment_text);
         
         //
@@ -156,49 +157,52 @@ function display_comment(str) {
 
 function askedComment() {
     var comment_text = document.getElementById('comment').value;
-    b64 = btoa(unescape(encodeURIComponent(comment_text)));
-
-    // console.log(comment_text, b64);
-    if (comment_text != "") {
-        req.open("POST", "ajax.php");
-        req.onreadystatechange = function() {
-            if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
-                ret = req.responseText;
-                str = ret.split(' ');
-                console.log(str);
-                if (str[0] != 'Fail') {
-                    div_comment = document.createElement('div');
-                    div_comment.setAttribute('class', 'div_comment');
-                    div_comment.setAttribute('title', str[0]);
-                    div_comment.addEventListener("click", askedDeleteComment);
-                    // div_comment.appendChild(div_comment_text);
-                    //
-                    p_name = document.createElement('p');
-                    p_name.setAttribute('class', 'p_name');
-                    //recuperer nom de l'utilisateur qui a commenté
-                    p_name_text = document.createTextNode(str[1]+" :");
-                    p_name.appendChild(p_name_text);
-                
-                    //
-                    p_comment = document.createElement('p');
-                    p_comment.setAttribute('class', 'p_comment');
-                    p_comment_text = document.createTextNode(decodeURIComponent(escape(window.atob(b64))));
-                    p_comment.appendChild(p_comment_text);
+    if (comment_text.length > 500) {
+        alert('I told you it was max 500 char !');
+        document.getElementById('comment').value = '';
+    }
+    else {
+        b64 = btoa(comment_text);
+        // console.log("BEFORE SEND", b64);
+        // console.log(comment_text, b64);
+        if (comment_text != "") {
+            req.open("POST", "ajax.php");
+            req.onreadystatechange = function() {
+                if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {console.log(req.responseText)
+                    ret = JSON.parse(req.responseText);
+                    // console.log("REGQRDE", ret);
+                    if (ret != 'Fail') {
+                        div_comment = document.createElement('div');
+                        div_comment.setAttribute('class', 'div_comment');
+                        div_comment.setAttribute('title', ret.id_comment);
+                        div_comment.addEventListener("click", askedDeleteComment);
+                        //
+                        p_name = document.createElement('p');
+                        p_name.setAttribute('class', 'p_name');
+                        p_name_text = document.createTextNode(ret.name+" :");
+                        p_name.appendChild(p_name_text);
                     
-                    //
-                    div_comment.appendChild(p_name);
-                    div_comment.appendChild(p_comment);
-                    document.getElementById('comment_body').insertBefore(div_comment, document.getElementById('null42'));
-                    document.getElementById('comment').value = '';
+                        //
+                        p_comment = document.createElement('p');
+                        p_comment.setAttribute('class', 'p_comment');
+                        p_comment_text = document.createTextNode(atob(b64));
+                        p_comment.appendChild(p_comment_text);
+                        
+                        //
+                        div_comment.appendChild(p_name);
+                        div_comment.appendChild(p_comment);
+                        document.getElementById('comment_body').insertBefore(div_comment, document.getElementById('null42'));
+                        document.getElementById('comment').value = '';
+                    }
+                    else {
+                        alert('Sorry, you need to sign it to comment this picture ! (;')
+                        document.getElementById('comment').value = '';
+                    }
                 }
-                else {
-                    alert('Sorry, you need to sign it to comment this picture ! (;')
-                    document.getElementById('comment').value = '';
-                }
-            }
-        };
-        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        req.send("page="+page+"&id="+id+"&comment="+b64+"&name="+name+"&email="+email);
+            };
+            req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            req.send("page="+page+"&id="+id+"&comment="+b64+"&name="+name+"&email="+email);
+        }
     }
 }
 
@@ -230,7 +234,7 @@ function askedDeleteComment(event) {
         req.open("POST", "ajax.php");
         req.onreadystatechange = function() {
             if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
-                console.log(req.responseText);
+                // console.log(req.responseText);
                 if (req.responseText != 'Fail')
                     document.location.href = "index.php";
                 else
