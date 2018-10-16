@@ -81,7 +81,6 @@ function send_mail($pdo, $name) {
     $request = $pdo->prepare("SELECT id FROM `users` WHERE name=:name");
     $params = array(':name' => $name);
     $request->execute($params);
-    // $id = $pdo->query($request);
     $id = $request->fetch()[0];
     $lien = "http://localhost:8080/Camagru/git/identification/validation.php?id=".$id;
     $message = "Welcome ".$_POST['name_request'].
@@ -105,7 +104,6 @@ function send_mail($pdo, $name) {
 }
 
 if (isset($_POST['name_request']) && isset($_POST['email_request']) && isset($_POST['password_request'])) {
-    //INJECTIONS SQL
     if (!check_existing_user($pdo, $_POST['name_request']) && !check_existing_adress($pdo, $_POST['email_request'])) {
         add_user_database($pdo, $_POST['name_request'], $_POST['password_request'], $_POST['email_request']);
         send_mail($pdo, $_POST['name_request']);

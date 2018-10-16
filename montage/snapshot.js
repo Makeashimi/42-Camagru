@@ -1,3 +1,4 @@
+var test = false;
 var choice = "";
 var file_boolean = false;
 var filter = null;
@@ -9,7 +10,6 @@ x_elem = 0, y_elem = 0;
 
 var video = document.getElementById('camera-stream');
 var camera = document.getElementById('camera');
-// file.addEventListener('canplay', hidden_div);
 video.addEventListener('canplay', hidden_div);
 
 //Move the filter
@@ -41,7 +41,8 @@ function hidden_div() {
 
 //Choose the filter
 document.getElementById('choice1').onclick = function() {
-    document.getElementById('snapshot').style.display = "block";
+    if (test || file_boolean)
+        document.getElementById('snapshot').style.display = "block";
 
     if (filter)
         filter.src = 'images/cat.png';
@@ -63,7 +64,8 @@ document.getElementById('choice1').onclick = function() {
 }
 
 document.getElementById('choice2').onclick = function() {
-    document.getElementById('snapshot').style.display = "block";
+    if (test || file_boolean)
+        document.getElementById('snapshot').style.display = "block";
 
     if (filter)
         filter.src = 'images/angerfist.png';
@@ -85,7 +87,8 @@ document.getElementById('choice2').onclick = function() {
 }
 
 document.getElementById('choice3').onclick = function() {
-    document.getElementById('snapshot').style.display = "block";
+    if (test || file_boolean)
+        document.getElementById('snapshot').style.display = "block";
 
     if (filter)
         filter.src = 'images/portal.png';
@@ -107,7 +110,8 @@ document.getElementById('choice3').onclick = function() {
 }
 
 document.getElementById('choice4').onclick = function() {
-    document.getElementById('snapshot').style.display = "block";
+    if (test || file_boolean)
+        document.getElementById('snapshot').style.display = "block";
 
     if (filter)
         filter.src = 'images/gun.png';
@@ -129,7 +133,7 @@ document.getElementById('choice4').onclick = function() {
 }
 
 //Get file
-function onSelectedFile() {
+function onSelectedFile(event) {
     file = event.target.files[0];
 
     if (file && file.type == 'image/png') {
@@ -160,6 +164,7 @@ window.onload = function() {
         var video = document.querySelector('video');
         video.srcObject = mediaStream;
         video.onloadedmetadata = function(e) {
+            test = true;
             video.play();
             };
         })
@@ -185,10 +190,10 @@ document.getElementById('snapshot').onclick = function() {
 
     var image = new Image();
     image.src = canvas.toDataURL();
-    // console.log(choice);
+    // console.log(image.src);
 
     var req = new XMLHttpRequest();
-    req.open("POST", "test.php");
+    req.open("POST", "ajax.php");
     req.onreadystatechange = function() {
         if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
             var ret = req.responseText;
@@ -196,12 +201,13 @@ document.getElementById('snapshot').onclick = function() {
             if (ret == 'Fail') {
                 alert('You need to choose your filter first !');
                 document.location.href = 'montage.php';
-            } else {
-            img = document.getElementById('image');
-            img.setAttribute('src', ret);
-            document.getElementById('image').style.display = "block";
-            document.getElementById('validate').style.display = "block";
-        }
+            }
+            else {
+                img = document.getElementById('image');
+                img.setAttribute('src', ret);
+                document.getElementById('image').style.display = "block";
+                document.getElementById('validate').style.display = "block";
+            }
         }
     };
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -211,7 +217,7 @@ document.getElementById('snapshot').onclick = function() {
 //Send the finale image
 document.getElementById('validate').onclick = function() {
     var req = new XMLHttpRequest();
-    req.open("POST", "test.php");
+    req.open("POST", "ajax.php");
     req.onreadystatechange = function() {
         if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
             document.location.href = 'montage.php';

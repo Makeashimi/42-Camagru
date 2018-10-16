@@ -14,21 +14,28 @@ if (!empty($_POST['picture_id'])) {
 
     if (isset($_SESSION['id_user'])) {
         $id_user = $_SESSION['id_user'];
-        //requete pour savoir si je peux delete
         $request = "SELECT email FROM `users` WHERE id='$user_id'";
         $email = $pdo->query($request)->fetch()[0];
         if ($user_id == $id_user)
-            $ret = "Ok ";
+            $ret = "Ok";
     }
     $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id";
     $like = $pdo->query($request)->fetch()[0];
+
+    $session_id = $_SESSION['id_user'];
+    $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id AND user_id=$session_id";
+    $user_like = $pdo->query($request)->fetch()[0];
+    if ($user_like > 0)
+        $color = "#3eb489";
+    else
+        $color = "black";
 
     $request = "SELECT comments.text, comments.id_comment, users.name FROM comments INNER JOIN users ON comments.id_user = users.id WHERE comments.id_picture='$picture_id'";
     $array = $pdo->query($request)->fetchAll(PDO::FETCH_ASSOC);
     for ($i = 0; $i < count($array); $i++) {
         $array[$i]["text"] = str_replace(' ', '+', $array[$i]['text']);
     }
-    //$array = json_encode($array);
+
     $tablo = array();
     $tablo["ret"] = $ret;
     $tablo["like"] = $like;
@@ -36,8 +43,8 @@ if (!empty($_POST['picture_id'])) {
     $tablo["name"] = $name;
     $tablo["email"] = $email;
     $tablo["src"] = $src;
+    $tablo["color"] = $color;
     echo json_encode($tablo);
-    //echo $ret." ".$array." ".$name." ".$email." ".$src;
 }
 
 if (!empty($_POST['like'])) {
@@ -49,27 +56,23 @@ if (!empty($_POST['like'])) {
     $picture_id = $_POST['like'];
     $user_id = $_SESSION['id_user'];
 
-    //recuperer le nombre de likes sur cette photo
     $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id";
     $nb_likes = $pdo->query($request)->fetch()[0];
 
-    //verifier que le type n'a pas deja liké
     $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id AND user_id=$user_id";
     $likes = $pdo->query($request)->fetch()[0];
     if ($likes > 0) {
-        //delete le like
         $request = "DELETE FROM `loves` WHERE id=$picture_id AND user_id=$user_id";
         $pdo->exec($request);
         $nb_likes = intval($nb_likes) - 1;
-        echo $nb_likes;
+        echo $nb_likes." black";
         return ;
     }
 
-    //inserer le meme id et le user_name avec
     $request = "INSERT INTO `loves` (id, user_id) VALUES ($picture_id, $user_id)";
     $pdo->exec($request);
     $nb_likes = intval($nb_likes) + 1;
-    echo $nb_likes;
+    echo $nb_likes." #3eb489";
 }
 
 if (!empty($_POST['id']) && !empty($_POST['comment']) && !empty($_POST['email']) && !empty($_POST['name'])) {
@@ -93,7 +96,7 @@ if (!empty($_POST['id']) && !empty($_POST['comment']) && !empty($_POST['email'])
         $page = $_POST['page'];
         $lien = "http://localhost:8080/Camagru/git/index.php?page=".$page."&id=".$picture_id;
         $message = "Welcome back ".$_POST['name'].
-        " !\r\n\nIt appears you received a new comment in your picture, check the link below to see this :\r\n".$lien." ! \r\nSee you soon :D";
+        " !\r\n\nIt appears you received a new comment in your picture, check the link below to see this :\r\n".$lien." ! \r\n\nSee you soon :D";
         $subject = "New comment in your picture";
         $to = $_POST['email'];
         if (mail($to, $subject, utf8_decode($message))) {

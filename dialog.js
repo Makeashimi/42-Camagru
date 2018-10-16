@@ -8,30 +8,29 @@ var div_comment;
 var div_like;
 var email;
 var name;
-var test = window.location.search;
-var degueux = test.search('id');
-var degueux2 = test.search('page');
+var link = window.location.search;
+var link_id = link.search('id');
+var link_page = link.search('page');
 var page;
 
 escapeHTML = function(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 };
 
-if (degueux >= 0) {
-    test = test.substr(degueux);
-    test = test.substr(test.search("=") + 1);
-    id = test;
+if (link_id >= 0) {
+    str = link.substr(link_id);
+    id = str.substr(str.search("=") + 1);
     showdialog();
 }
 
-if (degueux2 >= 0) {
-    test = test.substr(degueux2);
-    test = test.substr(test.search("=") + 1);
-    page = test;
-    console.log(page);
+if (link_page >= 0) {
+    str = link.substr(link_page);
+    if (link_id >= 0)
+        page = str.substring(str.search("=") + 1, str.indexOf('&'));
+    else
+        page = str.substr(str.search("=") + 1);
 }
 
-//if images
 pictures = document.getElementsByTagName('img');
 for (i = 0; i < pictures.length; i++) {
     pictures[i].addEventListener("click", showdialog);
@@ -48,14 +47,12 @@ function display_delete() {
         div_delete.setAttribute('class', 'fa fa-trash');
         div_delete.setAttribute('onClick', 'askedDelete()');
         popup.insertBefore(div_delete, div_null);
-        // console.log('Ce nom d user est bon, div creee');
     }
-    // else
-        // console.log('Ce nom user est bon mais la div a pas besoin detre cree');
 }
 
-function display_like(str) {
+function display_like(str, color_choice) {
     document.getElementById('like').innerHTML = " "+parseInt(str);
+    document.getElementById('like').style.color = color_choice;
 }
 
 function display_image(src) {
@@ -72,11 +69,12 @@ function getData() {
     req.onreadystatechange = function() {
         if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
             ret = JSON.parse(req.responseText);
+            // console.log(ret);
             display_image(ret.src);
             name = ret.name;
             email = ret.email;
             document.getElementById('user_name').innerHTML = "Image by : "+escapeHTML(ret.name);
-            display_like(ret.like);
+            display_like(ret.like, ret.color);
             display_comment(ret.array);
             if (ret.ret == "Ok") {
                 display_delete();
@@ -106,14 +104,15 @@ function showdialog(event) {
 
 function askedLike() {
     like = document.getElementById('like');
-    // console.log(id);
     req.open("POST", "ajax.php");
     req.onreadystatechange = function() {
         if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
             // console.log(req.responseText);
             ret = req.responseText;
+            str = ret.split(' ');
             if (ret != 'Fail') {
-                like.innerHTML = " "+parseInt(req.responseText);
+                like.innerHTML = " "+parseInt(str[0]);
+                like.style.color = str[1];
             }
             else if (ret == 'Fail')
                 alert('Sorry, you need to sign it to like this picture ! (;');
@@ -136,19 +135,16 @@ function display_comment(str) {
         div_comment.setAttribute('title', index.id_comment);
         div_comment.addEventListener("click", askedDeleteComment);
 
-        //
         p_name = document.createElement('p');
         p_name.setAttribute('class', 'p_name');
         p_name_text = document.createTextNode(index.name+" :");
         p_name.appendChild(p_name_text);
-       
-        //
+
         p_comment = document.createElement('p');
         p_comment.setAttribute('class', 'p_comment');
         p_comment_text = document.createTextNode(atob(index.text));
         p_comment.appendChild(p_comment_text);
-        
-        //
+
         div_comment.appendChild(p_name);
         div_comment.appendChild(p_comment);
         document.getElementById('comment_body').insertBefore(div_comment, document.getElementById('null42'));
@@ -157,18 +153,18 @@ function display_comment(str) {
 
 function askedComment() {
     var comment_text = document.getElementById('comment').value;
+
+    console.log(page);
     if (comment_text.length > 500) {
         alert('I told you it was max 500 char !');
         document.getElementById('comment').value = '';
     }
     else {
         b64 = btoa(comment_text);
-        // console.log("BEFORE SEND", b64);
-        // console.log(comment_text, b64);
         if (comment_text != "") {
             req.open("POST", "ajax.php");
             req.onreadystatechange = function() {
-                if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {console.log(req.responseText)
+                if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
                     ret = JSON.parse(req.responseText);
                     // console.log("REGQRDE", ret);
                     if (ret != 'Fail') {
@@ -176,19 +172,17 @@ function askedComment() {
                         div_comment.setAttribute('class', 'div_comment');
                         div_comment.setAttribute('title', ret.id_comment);
                         div_comment.addEventListener("click", askedDeleteComment);
-                        //
+                        
                         p_name = document.createElement('p');
                         p_name.setAttribute('class', 'p_name');
                         p_name_text = document.createTextNode(ret.name+" :");
                         p_name.appendChild(p_name_text);
                     
-                        //
                         p_comment = document.createElement('p');
                         p_comment.setAttribute('class', 'p_comment');
                         p_comment_text = document.createTextNode(atob(b64));
                         p_comment.appendChild(p_comment_text);
                         
-                        //
                         div_comment.appendChild(p_name);
                         div_comment.appendChild(p_comment);
                         document.getElementById('comment_body').insertBefore(div_comment, document.getElementById('null42'));

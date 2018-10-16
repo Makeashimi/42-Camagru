@@ -5,7 +5,7 @@
         <div id='user_name'></div>
         <img id='image_gallery' src='' size="auto"><br/>
         <div id="like" class="fas fa-thumbs-up" onClick='askedLike()'></div>
-        <div id="comment_body">
+        <div id="comment_body" style="overflow: auto; overflow-x:hidden; overflow-y:scroll;">
           <div id="null42"></div>
         </div>
           <?php

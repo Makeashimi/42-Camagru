@@ -93,7 +93,7 @@ body {
     margin-top: 80px;
     display: flex;
     justify-content: center;
-    align-content: center;
+    align-items: center;
     flex-wrap: wrap;
 }
 

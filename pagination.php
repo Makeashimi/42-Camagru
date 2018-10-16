@@ -1,5 +1,4 @@
 <div class="pagination">
-<!-- <a href="#">&laquo;</a> -->
 <?php
     $request = "SELECT COUNT(*) FROM `pictures` WHERE user_id";
     $nb_images = $pdo->query($request)->fetch()[0];
@@ -12,5 +11,4 @@
             echo "<a href='index.php?page=$index'>".$index++."</a>";
     }
 ?>
-<!-- <a href="#">&raquo;</a> -->
 </div>

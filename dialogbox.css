@@ -29,15 +29,15 @@
 }
 
 #like {
-    padding: 0 5px 10px 0;
+    cursor: pointer;
+    padding: 10px 0 15px 0;
     font-size: 30px;
     margin: auto;
 }
 
 #comment_body {
-    /* border: 2px solid green; */
-    overflow: auto;
-    max-height: 30%;
+    max-height: 300px;
+    width: 100%;
 }
 
 .div_comment {
@@ -59,6 +59,7 @@
 }
 
 .p_comment {
+    cursor: pointer;
     word-wrap: break-word;
     margin-left: 5px;
     font-size: 1em;
@@ -75,6 +76,7 @@
 }
 
 .button_validate {
+    cursor: pointer;
     margin: auto;
     width: 25%;
     height: 23px;
@@ -87,6 +89,7 @@
 }
 
 .fa, .fa-trash {
+    cursor: pointer;
     padding-left: 90%;
     font-size: 30px;
 }

@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="./webcam.css">
 
-<input type="file" id='file' onchange="onSelectedFile()" accept="image/png"/>
+<input type="file" id='file' onchange="onSelectedFile(event)" accept="image/png"/>
 <div id="camera">
     <video id="camera-stream" width="500" height="376"></video>
 </div>
