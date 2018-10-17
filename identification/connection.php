@@ -81,7 +81,7 @@ function send_mail($pdo, $adress) {
     $request = "UPDATE `users` SET hash_mail='$hash' WHERE email='$adress'";
     $pdo->exec($request);
     $lien = "http://localhost:8080/Camagru/git/identification/reset_password.php?id=".$hash;
-    $message = "Welcome back !\r\n\nIt seems like you forgot your password. If you need to change it, please click on the link below :\r\n".$lien." ! \r\nSee you soon :D";
+    $message = "Welcome back !\r\n\nIt seems like you forgot your password. If you need to change it, please click on the link below :\r\n".$lien." ! \r\n\nSee you soon :D";
     $subject = "Forgotten password for Camagru";
     $to = $adress;
     if (mail($to, $subject, utf8_decode($message))) {

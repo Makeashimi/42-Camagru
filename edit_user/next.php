@@ -45,20 +45,30 @@ if (isset($_SESSION['user'])) {
     }
 
     if (isset($_POST['new_password']) && $_POST['new_password'] != null) {
-        $id = $_SESSION['id_user'];
-        $request = "SELECT * FROM `users` WHERE id='$id'";
-        $infos = $pdo->query($request);
-        if ($infos->fetch()[2] != hash('whirlpool', $_POST['new_password'])) {
-            $new_password = hash('whirlpool', $_POST['new_password']);
-            if (!empty($value))
-                $value = $value.", ";
-            $value = $value."password='$new_password'";
+        if (strlen($_POST['new_password']) > 7 && preg_match('/\d/', $_POST['new_password']) === 1 && preg_match('/[A-Z]/', $_POST['new_password']) === 1) {
+            $id = $_SESSION['id_user'];
+            $request = "SELECT * FROM `users` WHERE id='$id'";
+            $infos = $pdo->query($request);
+            if ($infos->fetch()[2] != hash('whirlpool', $_POST['new_password'])) {
+                $new_password = hash('whirlpool', $_POST['new_password']);
+                if (!empty($value))
+                    $value = $value.", ";
+                $value = $value."password='$new_password'";
+            }
+            else {
+                ?>
+                    <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=same'"/> </head> </html>
+                <?php
+                return;
+            }
         }
         else {
             ?>
-                <html> <head> <meta http-equiv="refresh" content="0; URL='./profile.php?id=same'"/> </head> </html>
+            <head>
+                <meta http-equiv="refresh" content="0; URL='./profile.php?id=password'"/>
+            </head>
             <?php
-            return;
+            return ;
         }
     }
 

@@ -26,9 +26,8 @@ if (isset($_SESSION['user'])) {
                         <input class="input" type="text" name="new_name" maxlength="20"><br/>
                         <span class="text">New email adress</span><br/>
                         <input class="input" type="email" name="new_email" maxlength="50"><br/>
-                        <!-- securiser un peu le mdp genre min-length -->
-                        <span class="text">New password</span><br/>
-                        <input class="input" type="password" name="new_password"><br/>
+                        <span class="text">New password (Min 8 char with at least ONE number and ONE capital letter)</span><br/>
+                        <input class="input" type="password" name="new_password" minlength="8"><br/>
                         <span class="text">Actual password*</span><br/>
                         <input class="input" type="password" name="last_password" required>
                         <?php
@@ -49,7 +48,7 @@ if (isset($_SESSION['user'])) {
                                 echo "<br/><center class='wrong'>Wrong password.</center>";
                             if (isset($_GET['id']) && $_GET['id'] == 'fail')
                                 echo "<br/><center class='wrong'>These informations are already taken or invalid input.</center>";
-                                if (isset($_GET['id']) && $_GET['id'] == 'same')
+                            if (isset($_GET['id']) && $_GET['id'] == 'same')
                                 echo "<br/><center class='wrong'>You can't change your password by the same.</center>";
                         ?>
 

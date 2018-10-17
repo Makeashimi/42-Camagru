@@ -68,6 +68,7 @@ function getData() {
     req.open('POST', 'ajax.php');
     req.onreadystatechange = function() {
         if (req.status == 200 && req.readyState == XMLHttpRequest.DONE) {
+            // console.log(req.responseText);
             ret = JSON.parse(req.responseText);
             // console.log(ret);
             display_image(ret.src);
@@ -154,7 +155,7 @@ function display_comment(str) {
 function askedComment() {
     var comment_text = document.getElementById('comment').value;
 
-    console.log(page);
+    // console.log(page);
     if (comment_text.length > 500) {
         alert('I told you it was max 500 char !');
         document.getElementById('comment').value = '';

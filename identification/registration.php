@@ -11,13 +11,11 @@
             <div class="cadre">
                 <form class="rfi" action="./registration.php" method="post">
                     <span class="text">User name *</span><br/>
-                    <!-- securiser un peu le user dans la  genre min-length -->
                     <input class="input" type="text" name="name_request" maxlength="20" required><br/>
                     <span class="text">Email adress *</span><br/>
                     <input class="input" type="email" name="email_request" maxlength="50" required><br/>
-                    <!-- securiser un peu le mdp genre min-length -->
-                    <span class="text">Password *</span><br/>
-                    <input class="input" name="password_request" type="password" required><br/>
+                    <span class="text">Password (Min 8 char with at least ONE number and ONE capital letter) *</span><br/>
+                    <input class="input" name="password_request" type="password" minlength="8" required><br/>
                     <input class="submit" type="submit" value="Register"><br/>
                     <?php
                         if (isset($_GET['id']) && $_GET['id'] == 'account')
@@ -26,6 +24,8 @@
                             echo "<br/><center class='good'>Please check your emails to validate your adress, do not forget to check your unwanted messages (:</center>";
                         else if (isset($_GET['id']) && $_GET['id'] == 'error')
                             echo "<br/><center class='wrong'>Unfortunately, sending email did not work.. ):</center>";
+                        else if (isset($_GET['id']) && $_GET['id'] == 'password')
+                            echo "<br/><center class='wrong'>I told you : You need 8 char min with at least one number and one capital letter for your password.</center>";
                     ?>
                 </form>
              </div>
@@ -84,7 +84,7 @@ function send_mail($pdo, $name) {
     $id = $request->fetch()[0];
     $lien = "http://localhost:8080/Camagru/git/identification/validation.php?id=".$id;
     $message = "Welcome ".$_POST['name_request'].
-    " !\r\n\nPlease click on the link below to validate your account and join the adventure :\r\n".$lien." ! \r\nSee you soon :D";
+    " !\r\n\nPlease click on the link below to validate your account and join the adventure :\r\n".$lien." ! \r\n\nSee you soon :D";
     $subject = "Registration for Camagru";
     $to = $_POST['email_request'];
     if (mail($to, $subject, utf8_decode($message))) {
@@ -105,8 +105,17 @@ function send_mail($pdo, $name) {
 
 if (isset($_POST['name_request']) && isset($_POST['email_request']) && isset($_POST['password_request'])) {
     if (!check_existing_user($pdo, $_POST['name_request']) && !check_existing_adress($pdo, $_POST['email_request'])) {
-        add_user_database($pdo, $_POST['name_request'], $_POST['password_request'], $_POST['email_request']);
-        send_mail($pdo, $_POST['name_request']);
+        if (strlen($_POST['password_request']) > 7 && preg_match('/\d/', $_POST['password_request']) === 1 && preg_match('/[A-Z]/', $_POST['password_request']) === 1) {
+            add_user_database($pdo, $_POST['name_request'], $_POST['password_request'], $_POST['email_request']);
+            send_mail($pdo, $_POST['name_request']);
+        }
+        else {
+            ?>
+            <head>
+                <meta http-equiv="refresh" content="0; URL='./registration.php?id=password'"/>
+            </head>
+            <?php
+        }
     }
     else {
         ?>

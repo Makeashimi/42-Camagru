@@ -11,6 +11,7 @@ if (!empty($_POST['picture_id'])) {
     $src = str_replace(' ', '+', $pictures_infos[1]);
     $name = $pictures_infos[2];
     $email = null;
+    $color = null;
 
     if (isset($_SESSION['id_user'])) {
         $id_user = $_SESSION['id_user'];
@@ -18,17 +19,16 @@ if (!empty($_POST['picture_id'])) {
         $email = $pdo->query($request)->fetch()[0];
         if ($user_id == $id_user)
             $ret = "Ok";
+
+        $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id AND user_id=$id_user";
+        $user_like = $pdo->query($request)->fetch()[0];
+        if ($user_like > 0)
+            $color = "#3eb489";
+        else
+            $color = "black";
     }
     $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id";
     $like = $pdo->query($request)->fetch()[0];
-
-    $session_id = $_SESSION['id_user'];
-    $request = "SELECT COUNT(id) FROM `loves` WHERE id=$picture_id AND user_id=$session_id";
-    $user_like = $pdo->query($request)->fetch()[0];
-    if ($user_like > 0)
-        $color = "#3eb489";
-    else
-        $color = "black";
 
     $request = "SELECT comments.text, comments.id_comment, users.name FROM comments INNER JOIN users ON comments.id_user = users.id WHERE comments.id_picture='$picture_id'";
     $array = $pdo->query($request)->fetchAll(PDO::FETCH_ASSOC);
